@@ -1,0 +1,9 @@
+
+1.  create git repo
+2.  add hilt
+3.  add kotlin format checker
+4.  add git hub actions to build run tests
+5.  add view model
+6.  add usecase
+7.  add ktor
+8.  add styling
