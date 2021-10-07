@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -25,6 +26,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launchWhenCreated {
+            ktorHttpClient
+            val userApi = UserApi(ktorHttpClient)
+
+            val r = userApi.getUserKtor("")
+
+            var u = 0
+        }
+
         setContent {
 
             MultiLeagueFootballTheme {
