@@ -2,7 +2,8 @@ package com.ds.multileaguefootball.presentaion.util
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.TableRows
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ds.multileaguefootball.R
 
