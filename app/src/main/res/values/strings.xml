@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MultiLeagueFootball</string>
+    <string name="league_table">League Table</string>
+    <string name="pick_a_league">Pick a League</string>
 </resources>
