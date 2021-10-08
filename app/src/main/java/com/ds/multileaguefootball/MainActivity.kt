@@ -9,15 +9,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ds.multileaguefootball.presentaion.allLeagues.PickALeaguesScreen
-import com.ds.multileaguefootball.presentaion.singleLeague.LeagueTableScreen
+import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
+import com.ds.multileaguefootball.presentaion.pickALeague.PickALeagueScreen
 import com.ds.multileaguefootball.presentaion.util.Screen.*
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,14 +26,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launchWhenCreated {
-            ktorHttpClient
-            val userApi = UserApi(ktorHttpClient)
-
-            val r = userApi.getUserKtor("")
-
-            var u = 0
-        }
+//        lifecycleScope.launchWhenCreated {
+//            ktorHttpClient
+//            val userApi = UserApi(ktorHttpClient)
+//
+//            val r = userApi.getUserKtor("")
+//
+//            var u = 0
+//        }
 
         setContent {
 
@@ -83,7 +82,7 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController,
-                            startDestination = LeagueTable.route,
+                            startDestination = PickALeague.route,
                             Modifier.padding(innerPadding)
                         ) {
                             composable(LeagueTable.route) {
@@ -93,7 +92,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(PickALeague.route) {
-                                PickALeaguesScreen(
+                                PickALeagueScreen(
                                     navController
                                 )
                             }

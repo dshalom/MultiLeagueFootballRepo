@@ -73,6 +73,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // For instrumentation tests
