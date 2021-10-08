@@ -4,12 +4,19 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import timber.log.Timber
 
 @Composable
 fun PickALeagueScreen(
     navController: NavHostController,
-    hiltViewModel: PickALeagueViewModel = hiltViewModel()
+    pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
 
-    Text(text = hiltViewModel.doint())
+    val vs = pickALeagueViewModel.viewState.value
+    Timber.i("dsds re")
+
+    vs.data?.also {
+        Timber.i("dsds dataupdate")
+        Text(text = vs.data.size.toString())
+    }
 }
