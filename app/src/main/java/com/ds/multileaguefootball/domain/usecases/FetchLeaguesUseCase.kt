@@ -11,8 +11,11 @@ class FetchLeaguesUseCase @Inject constructor(
 ) : BaseUseCase<Unit, List<Competition>> {
     override suspend fun invoke(other: Unit) = flow {
         try {
-            val r = repo.fetchLeagues()
-            emit(Resource.Success(r))
+            val result = repo.fetchLeagues()
+                .filter {
+                    it.ensignUrl != null
+                }
+            emit(Resource.Success(result))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage))
         }

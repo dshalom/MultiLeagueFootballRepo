@@ -26,17 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        lifecycleScope.launchWhenCreated {
-//            ktorHttpClient
-//            val userApi = UserApi(ktorHttpClient)
-//
-//            val r = userApi.getUserKtor("")
-//
-//            var u = 0
-//        }
-
         setContent {
-
             MultiLeagueFootballTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(

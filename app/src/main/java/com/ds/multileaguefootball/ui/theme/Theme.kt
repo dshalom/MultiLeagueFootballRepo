@@ -7,15 +7,15 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = PrimaryBlue,
+    primaryVariant = BackgroundBlue,
+    secondary = SecondaryOrange
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = PrimaryBlue,
+    primaryVariant = BackgroundBlue,
+    secondary = SecondaryOrange
 
     /* Other default colors to override
     background = Color.White,
@@ -40,7 +40,7 @@ fun MultiLeagueFootballTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = typography,
         shapes = Shapes,
         content = content
     )
