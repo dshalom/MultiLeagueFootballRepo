@@ -1,4 +1,4 @@
-package com.ds.multileaguefootball.common
+package com.ds.multileaguefootball.domain.common
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
     class Success<T>(data: T) : Resource<T>(data)

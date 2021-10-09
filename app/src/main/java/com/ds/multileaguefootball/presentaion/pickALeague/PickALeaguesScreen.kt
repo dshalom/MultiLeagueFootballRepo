@@ -2,6 +2,7 @@ package com.ds.multileaguefootball.presentaion.pickALeague
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import timber.log.Timber
@@ -11,12 +12,10 @@ fun PickALeagueScreen(
     navController: NavHostController,
     pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
+    val viewState = pickALeagueViewModel.viewState.collectAsState().value
 
-    val vs = pickALeagueViewModel.viewState.value
-    Timber.i("dsds re")
-
-    vs.data?.also {
+    viewState.data?.also {
         Timber.i("dsds dataupdate")
-        Text(text = vs.data.size.toString())
+        Text(text = it.size.toString())
     }
 }

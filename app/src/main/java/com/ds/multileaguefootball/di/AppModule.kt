@@ -1,6 +1,7 @@
 package com.ds.multileaguefootball.di
 
 import android.util.Log
+import com.ds.multileaguefootball.BuildConfig
 import com.ds.multileaguefootball.data.httpclient.ApiService
 import com.ds.multileaguefootball.data.repo.RepoImpl
 import com.ds.multileaguefootball.domain.repo.Repo
@@ -24,12 +25,10 @@ private const val TIME_OUT = 60_000
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     fun provideHttpClient(): HttpClient {
         return HttpClient(Android) {
-
             install(JsonFeature) {
                 serializer = KotlinxSerializer(
                     kotlinx.serialization.json.Json {
@@ -62,15 +61,19 @@ object AppModule {
 
             install(DefaultRequest) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
-                header("X-Auth-Token", "28e9f6765daa49f595cb6313e4a779d1")
+                header("X-Auth-Token", BuildConfig.APP_KEY)
             }
         }
     }
 
     @Provides
     @Singleton
-    fun provideApiService(httpClient: HttpClient): ApiService {
-        return ApiService(httpClient)
+    fun provideBaseUrl(): String = "http://api.football-data.org/v2/"
+
+    @Provides
+    @Singleton
+    fun provideApiService(httpClient: HttpClient, baseUrl: String): ApiService {
+        return ApiService(httpClient, baseUrl)
     }
 
     @Provides
