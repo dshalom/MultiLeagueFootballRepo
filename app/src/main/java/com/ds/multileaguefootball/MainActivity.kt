@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
 import com.ds.multileaguefootball.presentaion.pickALeague.PickALeagueScreen
-import com.ds.multileaguefootball.presentaion.util.Screen.*
+import com.ds.multileaguefootball.presentaion.util.Screen
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,8 +43,8 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
 
                     val items = listOf(
-                        LeagueTable,
-                        PickALeague,
+                        Screen.LeagueTable,
+                        Screen.PickALeague,
                     )
 
                     Scaffold(
@@ -69,11 +69,11 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController,
-                            startDestination = PickALeague.route,
+                            startDestination = Screen.PickALeague.route,
                             Modifier.padding(innerPadding)
                         ) {
                             composable(
-                                LeagueTable.route + "/{leagueId}",
+                                Screen.LeagueTable.route + "/{leagueId}",
                                 arguments = listOf(
                                     navArgument(name = "leagueId") {
                                         type = NavType.IntType
@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            composable(PickALeague.route) {
+                            composable(Screen.PickALeague.route) {
                                 PickALeagueScreen(
                                     navController
                                 )
