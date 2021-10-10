@@ -10,11 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
 import com.ds.multileaguefootball.presentaion.pickALeague.PickALeagueScreen
 import com.ds.multileaguefootball.presentaion.util.Screen.*
@@ -52,16 +53,6 @@ class MainActivity : ComponentActivity() {
                                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                                         onClick = {
                                             navController.navigate(screen.route) {
-                                                // Pop up to the start destination of the graph to
-                                                // avoid building up a large stack of destinations
-                                                // on the back stack as users select items
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }
-                                                // Avoid multiple copies of the same destination when
-                                                // reselecting the same item
-                                                launchSingleTop = true
-                                                // Restore state when reselecting a previously selected item
                                                 restoreState = true
                                             }
                                         }
@@ -75,8 +66,16 @@ class MainActivity : ComponentActivity() {
                             startDestination = PickALeague.route,
                             Modifier.padding(innerPadding)
                         ) {
-                            composable(LeagueTable.route) {
+                            composable(
+                                LeagueTable.route + "/{leagueId}",
+                                arguments = listOf(
+                                    navArgument(name = "leagueId") {
+                                        type = NavType.IntType
+                                    }
+                                )
+                            ) { entry ->
                                 LeagueTableScreen(
+                                    entry.arguments?.getInt("leagueId") ?: 0,
                                     navController
                                 )
                             }

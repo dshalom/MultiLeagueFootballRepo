@@ -59,9 +59,9 @@ fun PickALeagueScreen(
 
         LazyColumn {
             items(it) { item ->
-                LeagueItem(imageLoader, item) {
+                LeagueItem(imageLoader, item) { leagueId ->
                     Timber.i("dsds navigating")
-                    navController.navigate(Screen.LeagueTable.route)
+                    navController.navigate(Screen.LeagueTable.route + "/$leagueId")
                 }
             }
         }
@@ -69,14 +69,14 @@ fun PickALeagueScreen(
 }
 
 @Composable
-fun LeagueItem(imageLoader: ImageLoader, competition: Competition, onclick: () -> Unit) {
+fun LeagueItem(imageLoader: ImageLoader, competition: Competition, onclick: (Int) -> Unit) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onclick() }
+            .clickable { onclick(competition.id) }
     ) {
 
         Spacer(modifier = Modifier.width(16.dp))

@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-fun LeagueTableScreen(navController: NavHostController) {
+fun LeagueTableScreen(leagueId: Int, navController: NavHostController) {
 
-    Text(text = "LeagueTableScreen")
+    Text(text = "LeagueTableScreen $leagueId")
 }
