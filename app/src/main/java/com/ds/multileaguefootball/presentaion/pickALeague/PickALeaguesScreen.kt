@@ -61,7 +61,7 @@ fun PickALeagueScreen(
             items(it) { item ->
                 LeagueItem(imageLoader, item) { leagueId ->
                     Timber.i("dsds navigating")
-                    navController.navigate(Screen.LeagueTable.route + "/$leagueId")
+                    navController.navigate(Screen.LeagueTable.route + "?$leagueId")
                 }
             }
         }
@@ -70,7 +70,6 @@ fun PickALeagueScreen(
 
 @Composable
 fun LeagueItem(imageLoader: ImageLoader, competition: Competition, onclick: (Int) -> Unit) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier

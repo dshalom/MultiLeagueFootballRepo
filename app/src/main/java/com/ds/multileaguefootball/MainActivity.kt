@@ -73,16 +73,17 @@ class MainActivity : ComponentActivity() {
                             Modifier.padding(innerPadding)
                         ) {
                             composable(
-                                Screen.LeagueTable.route + "/{leagueId}",
+                                Screen.LeagueTable.route + "?leagueId={leagueId}",
                                 arguments = listOf(
                                     navArgument(name = "leagueId") {
                                         type = NavType.IntType
+                                        defaultValue = 0
                                     }
                                 )
                             ) { entry ->
                                 LeagueTableScreen(
-                                    entry.arguments?.getInt("leagueId") ?: 0,
-                                    navController
+                                    navController,
+                                    entry.arguments?.getInt("leagueId") ?: 0
                                 )
                             }
 
