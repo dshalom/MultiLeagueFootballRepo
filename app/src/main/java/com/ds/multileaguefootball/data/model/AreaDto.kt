@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AreaDto(
-    val countryCode: String,
-    val ensignUrl: String?,
+    val countryCode: String = "",
+    val ensignUrl: String? = "",
     val id: Int,
     val name: String
 )
