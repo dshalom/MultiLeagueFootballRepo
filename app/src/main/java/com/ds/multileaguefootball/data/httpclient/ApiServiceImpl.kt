@@ -6,13 +6,18 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import javax.inject.Inject
 
-class ApiService @Inject constructor(
+interface ApiService {
+    suspend fun getLeagues(): CompetitionsDto
+    suspend fun getStandings(leagueId: Int): StandingsDto
+}
+
+class ApiServiceImpl @Inject constructor(
     private val client: HttpClient,
     private val baseAddress: String
-) {
-    suspend fun getLeagues(): CompetitionsDto =
+) : ApiService {
+    override suspend fun getLeagues(): CompetitionsDto =
         client.get("${baseAddress}competitions")
 
-    suspend fun getStandings(leagueId: Int): StandingsDto =
+    override suspend fun getStandings(leagueId: Int): StandingsDto =
         client.get("${baseAddress}competitions/$leagueId/standings")
 }

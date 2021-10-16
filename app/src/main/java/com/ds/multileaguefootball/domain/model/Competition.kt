@@ -34,7 +34,7 @@ data class Table(
 )
 
 data class Team(
-    val crestUrl: String,
+    val crestUrl: String?,
     val id: Int,
     val name: String
 )

@@ -2,7 +2,8 @@ package com.ds.multileaguefootball.di
 
 import android.util.Log
 import com.ds.multileaguefootball.BuildConfig
-import com.ds.multileaguefootball.data.httpclient.ApiService
+import com.ds.multileaguefootball.data.InMemoryCache
+import com.ds.multileaguefootball.data.httpclient.ApiServiceImpl
 import com.ds.multileaguefootball.data.repo.RepoImpl
 import com.ds.multileaguefootball.domain.repo.Repo
 import dagger.Module
@@ -40,7 +41,6 @@ object AppModule {
                         ignoreUnknownKeys = true
                     }
                 )
-
                 engine {
                     connectTimeout = TIME_OUT
                     socketTimeout = TIME_OUT
@@ -75,13 +75,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiService(httpClient: HttpClient, baseUrl: String): ApiService {
-        return ApiService(httpClient, baseUrl)
+    fun provideApiService(httpClient: HttpClient, baseUrl: String): ApiServiceImpl {
+        return ApiServiceImpl(httpClient, baseUrl)
     }
 
     @Provides
     @Singleton
-    fun provideRepo(apiService: ApiService): Repo {
-        return RepoImpl(apiService)
+    fun provideRepo(apiServiceImpl: ApiServiceImpl, inMemoryCache: InMemoryCache): Repo {
+        return RepoImpl(apiServiceImpl, inMemoryCache)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAvailableLeagueCodes(): List<Int> {
+        return listOf(2002, 2003, 2014, 2015, 2016, 2017, 2019)
     }
 }

@@ -7,13 +7,15 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FetchLeaguesUseCase @Inject constructor(
-    private val repo: Repo
+    private val repo: Repo,
+    private val availableLeagues: List<Int>
 ) : BaseUseCase<Unit, List<Competition>> {
+
     override suspend fun invoke(other: Unit) = flow {
         try {
             val result = repo.fetchLeagues()
                 .filter {
-                    it.ensignUrl != null
+                    it.ensignUrl != null && availableLeagues.contains(it.id)
                 }
             emit(Resource.Success(result))
         } catch (e: Exception) {

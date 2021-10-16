@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -80,14 +81,17 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(
-                                route = LeagueTable.route + "/?name=/{name}",
+                                route = LeagueTable.route + "?leagueId={leagueId}",
                                 arguments = listOf(
-                                    navArgument("name") { defaultValue = "me" }
+                                    navArgument("leagueId") {
+                                        type = NavType.IntType
+                                        defaultValue = 0
+                                    }
                                 )
                             ) { backStackEntry ->
                                 LeagueTableScreen(
                                     navController,
-                                    backStackEntry.arguments?.getString("name")
+                                    backStackEntry.arguments?.getInt("leagueId") ?: 0
                                 )
                             }
                         }

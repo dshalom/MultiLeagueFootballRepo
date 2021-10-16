@@ -34,7 +34,6 @@ import coil.decode.SvgDecoder
 import com.ds.multileaguefootball.domain.model.Competition
 import com.ds.multileaguefootball.presentaion.util.Screen
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
-import timber.log.Timber
 
 @Composable
 fun PickALeagueScreen(
@@ -54,14 +53,12 @@ fun PickALeagueScreen(
                 .build()
         }
 
-        Timber.i("dsds dataupdate")
         Text(text = it.size.toString())
 
         LazyColumn {
             items(it) { item ->
                 LeagueItem(imageLoader, item) { leagueId ->
-                    Timber.i("dsds navigating")
-                    navController.navigate(Screen.LeagueTable.route + "/?name=/$leagueId")
+                    navController.navigate(Screen.LeagueTable.route + "?leagueId=$leagueId")
                 }
             }
         }
