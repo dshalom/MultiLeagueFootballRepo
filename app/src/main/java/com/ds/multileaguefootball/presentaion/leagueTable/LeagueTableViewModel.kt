@@ -19,13 +19,9 @@ class LeagueTableViewModel @Inject constructor(private val fetchStandingsUseCase
         MutableStateFlow(LeagueTableState(null, false))
     val viewState: StateFlow<LeagueTableState> = _viewState
 
-    init {
-        fetchStandings()
-    }
-
-    private fun fetchStandings() {
+    fun fetchStandings(leagueId: Int) {
         viewModelScope.launch {
-            val result = fetchStandingsUseCase(2021)
+            val result = fetchStandingsUseCase(leagueId = leagueId)
             result.collect {
                 _viewState.value = when (it) {
                     is Resource.Error -> LeagueTableState(error = true)

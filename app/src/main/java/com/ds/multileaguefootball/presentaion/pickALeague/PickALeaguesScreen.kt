@@ -61,7 +61,7 @@ fun PickALeagueScreen(
             items(it) { item ->
                 LeagueItem(imageLoader, item) { leagueId ->
                     Timber.i("dsds navigating")
-                    navController.navigate(Screen.LeagueTable.route + "?$leagueId")
+                    navController.navigate(Screen.LeagueTable.route + "/?name=/$leagueId")
                 }
             }
         }
