@@ -1,16 +1,14 @@
 package com.ds.multileaguefootball.data.model
 
-import com.ds.multileaguefootball.domain.model.Standing
+import com.ds.multileaguefootball.domain.model.TableEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class StandingDto(
-    val table: List<TableDto>? = null
+    val table: List<TableDto>
 ) {
 
-    fun toDomain(): Standing {
-        return Standing(
-            table = table?.map { it.toDomain() }
-        )
+    fun toDomain(): List<TableEntry> {
+        return table.map { it.toDomain() }
     }
 }

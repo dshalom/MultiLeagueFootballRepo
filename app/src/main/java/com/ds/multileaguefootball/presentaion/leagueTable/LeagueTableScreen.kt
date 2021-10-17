@@ -27,13 +27,13 @@ fun LeagueTableScreen(
         }
     }
 
-    viewState.data?.also {
+    viewState.data?.table?.let { table ->
         LazyColumn {
-            items(it.standings[0].table!!) { tableItem ->
-
+            items(table) { tableItem ->
                 Text(
-                    text = tableItem.team.name,
-                    Modifier.fillMaxWidth()
+                    text = tableItem.name,
+                    Modifier
+                        .fillMaxWidth()
                         .padding(8.dp)
                 )
             }

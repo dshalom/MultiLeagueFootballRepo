@@ -7,13 +7,11 @@ import kotlinx.serialization.Serializable
 data class StandingsDto(
     val competition: CompetitionDto,
     val standings: List<StandingDto>
-
 ) {
-
     fun toDomain(): Standings {
         return Standings(
             competition = competition.toDomain(),
-            standings = standings.map { it.toDomain() }
+            table = standings.map { it.toDomain() }[0]
         )
     }
 }
