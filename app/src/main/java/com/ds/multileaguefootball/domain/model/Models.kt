@@ -1,23 +1,8 @@
 package com.ds.multileaguefootball.domain.model
 
-data class Competition(
-    val id: Int,
-    val name: String,
-    val areaName: String?,
-    val countryCode: String?,
-    val currentSeasonId: Int?,
-    val currentSeasonStartDate: String?,
-    val currentSeasonEndDate: String?,
-    val ensignUrl: String?
-)
-
 data class Standings(
     val competition: Competition,
-    val standings: List<Standing>
-)
-
-data class Standing(
-    val table: List<TableEntry>? = null
+    val table: List<TableEntry>
 )
 
 data class TableEntry(
@@ -33,4 +18,15 @@ data class TableEntry(
     val points: Int,
     val position: Int,
     val won: Int
+)
+
+data class Competition(
+    val id: Int,
+    val name: String,
+    val areaName: String?,
+    val countryCode: String?,
+    val currentSeasonId: Int?,
+    val currentSeasonStartDate: String?,
+    val currentSeasonEndDate: String?,
+    val ensignUrl: String?
 )
