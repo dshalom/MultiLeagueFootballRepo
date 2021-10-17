@@ -32,8 +32,9 @@ fun LeagueTableScreen(
             items(it.standings[0].table!!) { tableItem ->
 
                 Text(
-                    text = tableItem.team.name,
-                    Modifier.fillMaxWidth()
+                    text = tableItem.name,
+                    Modifier
+                        .fillMaxWidth()
                         .padding(8.dp)
                 )
             }

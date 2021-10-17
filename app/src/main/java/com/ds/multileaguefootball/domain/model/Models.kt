@@ -17,10 +17,13 @@ data class Standings(
 )
 
 data class Standing(
-    val table: List<Table>? = null
+    val table: List<TableEntry>? = null
 )
 
-data class Table(
+data class TableEntry(
+    val crestUrl: String?,
+    val id: Int,
+    val name: String,
     val draw: Int,
     val goalDifference: Int,
     val goalsAgainst: Int,
@@ -29,12 +32,5 @@ data class Table(
     val playedGames: Int,
     val points: Int,
     val position: Int,
-    val team: Team,
     val won: Int
-)
-
-data class Team(
-    val crestUrl: String?,
-    val id: Int,
-    val name: String
 )
