@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.ds.multileaguefootball.presentaion.common.ErrorScreen
+import com.ds.multileaguefootball.presentaion.common.LoadingScreen
 
 @Composable
 fun LeagueTableScreen(
@@ -27,15 +29,27 @@ fun LeagueTableScreen(
         }
     }
 
-    viewState.data?.table?.let { table ->
-        LazyColumn {
-            items(table) { tableItem ->
-                Text(
-                    text = tableItem.name,
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                )
+    when {
+        viewState.loading -> {
+            LoadingScreen()
+        }
+        viewState.error -> {
+            ErrorScreen()
+        }
+        else -> {
+            viewState.data?.table?.let { table ->
+                LazyColumn {
+                    items(table) { tableItem ->
+                        Text(
+                            text = tableItem.name,
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+                    }
+                }
+            } ?: run {
+                ErrorScreen()
             }
         }
     }

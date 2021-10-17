@@ -3,10 +3,17 @@
 no order:
 
 persist league
-simplify domain models
+simplify domain models  DONE
 day-night styling
 error handling
+    -   offline     DONE
+    -   corrupt data DONE
+    -   loading     DONE
+
 testing UI
+    -   offline
+    -   corrupt data
+    -   loading
 
 
 long term

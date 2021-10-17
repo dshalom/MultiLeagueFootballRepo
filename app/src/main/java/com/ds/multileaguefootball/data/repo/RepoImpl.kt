@@ -13,7 +13,6 @@ class RepoImpl @Inject constructor(
     private val inMemoryCache: InMemoryCache
 ) : Repo {
     override suspend fun fetchLeagues(): List<Competition> {
-
         return inMemoryCache.competitions?.also {
             Timber.i("fetching leagues from cache")
         } ?: run {

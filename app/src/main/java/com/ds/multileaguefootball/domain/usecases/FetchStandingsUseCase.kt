@@ -11,6 +11,7 @@ class FetchStandingsUseCase @Inject constructor(
 ) : BaseUseCase<Int, Standings> {
     override suspend fun invoke(leagueId: Int) = flow {
         try {
+            emit(Resource.Loading())
             val result = repo.fetchStandings(leagueId)
 
             emit(Resource.Success(result))

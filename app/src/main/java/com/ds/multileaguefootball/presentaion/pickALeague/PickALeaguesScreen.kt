@@ -32,6 +32,8 @@ import coil.compose.LocalImageLoader
 import coil.compose.rememberImagePainter
 import coil.decode.SvgDecoder
 import com.ds.multileaguefootball.domain.model.Competition
+import com.ds.multileaguefootball.presentaion.common.ErrorScreen
+import com.ds.multileaguefootball.presentaion.common.LoadingScreen
 import com.ds.multileaguefootball.presentaion.util.Screen
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 
@@ -41,25 +43,33 @@ fun PickALeagueScreen(
     pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
     val viewState = pickALeagueViewModel.viewState.collectAsState().value
-
-    viewState.data?.also {
-
-        val context = LocalContext.current
-        val imageLoader = remember {
-            ImageLoader.Builder(context)
-                .componentRegistry {
-                    add(SvgDecoder(context))
-                }
-                .build()
+    when {
+        viewState.loading -> {
+            LoadingScreen()
         }
-
-        Text(text = it.size.toString())
-
-        LazyColumn {
-            items(it) { item ->
-                LeagueItem(imageLoader, item) { leagueId ->
-                    navController.navigate(Screen.LeagueTable.route + "?leagueId=$leagueId")
+        viewState.error -> {
+            ErrorScreen()
+        }
+        else -> {
+            viewState.data?.let { competition ->
+                val context = LocalContext.current
+                val imageLoader = remember {
+                    ImageLoader.Builder(context)
+                        .componentRegistry {
+                            add(SvgDecoder(context))
+                        }
+                        .build()
                 }
+
+                LazyColumn {
+                    items(competition) { item ->
+                        LeagueItem(imageLoader, item) { leagueId ->
+                            navController.navigate(Screen.LeagueTable.route + "?leagueId=$leagueId")
+                        }
+                    }
+                }
+            } ?: run {
+                ErrorScreen()
             }
         }
     }
