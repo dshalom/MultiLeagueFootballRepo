@@ -24,14 +24,21 @@ class LeagueTableViewModel @Inject constructor(private val fetchStandingsUseCase
             val result = fetchStandingsUseCase(leagueId = leagueId)
             result.collect {
                 _viewState.value = when (it) {
-                    is Resource.Error -> LeagueTableState(error = true)
-                    is Resource.Loading -> LeagueTableState(loading = true)
-                    is Resource.Success -> {
-                        LeagueTableState(
-                            data = it.data,
-                            error = false
-                        )
-                    }
+                    is Resource.Error -> LeagueTableState(
+                        error = true,
+                        loading = false,
+                        data = null
+                    )
+                    is Resource.Loading -> LeagueTableState(
+                        loading = true,
+                        error = false,
+                        data = null
+                    )
+                    is Resource.Success -> LeagueTableState(
+                        data = it.data,
+                        error = false,
+                        loading = false
+                    )
                 }
             }
         }
