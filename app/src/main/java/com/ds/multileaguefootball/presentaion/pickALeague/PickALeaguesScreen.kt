@@ -68,8 +68,6 @@ fun PickALeagueScreen(
                         }
                     }
                 }
-            } ?: run {
-                ErrorScreen()
             }
         }
     }

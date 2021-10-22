@@ -48,8 +48,6 @@ fun LeagueTableScreen(
                         )
                     }
                 }
-            } ?: run {
-                ErrorScreen()
             }
         }
     }
