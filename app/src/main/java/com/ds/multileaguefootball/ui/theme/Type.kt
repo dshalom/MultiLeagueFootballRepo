@@ -20,12 +20,13 @@ val typography = Typography(
         fontSize = 24.sp,
     ),
     h2 = TextStyle(
-        fontFamily = UrbanistExtraBold,
+        fontFamily = UrbanistSemiBold,
         fontSize = 20.sp,
     ),
     h3 = TextStyle(
         fontFamily = UrbanistSemiBold,
         fontSize = 16.sp,
+        letterSpacing = 0.sp
     ),
     subtitle1 = TextStyle(
         fontFamily = UrbanistMedium,
