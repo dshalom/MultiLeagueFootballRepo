@@ -66,51 +66,15 @@ fun LeagueTableScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly
 
                         ) {
-
-                            Spacer(
-                                modifier =
-                                Modifier.width(40.dp)
-                            )
-
-                            Spacer(
-                                modifier =
-                                Modifier.fillMaxWidth(0.375f)
-                            )
-
-                            Text(
-                                text = "",
-                                style = MaterialTheme.typography.h3,
-                            )
-
-                            Text(
-                                text = "P",
-                                style = MaterialTheme.typography.h3,
-                            )
-
-                            Text(
-                                text = "W",
-
-                                style = MaterialTheme.typography.h3,
-                            )
-
-                            Text(
-                                text = "D",
-
-                                style = MaterialTheme.typography.h3,
-                            )
-
-                            Text(
-                                text = "L",
-                                style = MaterialTheme.typography.h3,
-                            )
-                            Text(
-                                text = "G",
-                                style = MaterialTheme.typography.h3,
-                            )
-                            Text(
-                                text = "P",
-                                style = MaterialTheme.typography.h3,
-                            )
+                            Spacer(modifier = Modifier.width(40.dp))
+                            Spacer(modifier = Modifier.fillMaxWidth(0.375f))
+                            Text(text = "", style = MaterialTheme.typography.h3)
+                            Text(text = "P", style = MaterialTheme.typography.h3)
+                            Text(text = "W", style = MaterialTheme.typography.h3)
+                            Text(text = "D", style = MaterialTheme.typography.h3)
+                            Text(text = "L", style = MaterialTheme.typography.h3)
+                            Text(text = "G", style = MaterialTheme.typography.h3)
+                            Text(text = "P", style = MaterialTheme.typography.h3)
                         }
 
                         LazyColumn {
@@ -126,11 +90,7 @@ fun LeagueTableScreen(
                                     horizontalArrangement = Arrangement.SpaceEvenly
 
                                 ) {
-                                    Text(
-                                        text = (index + 1).toString(),
-
-                                        style = MaterialTheme.typography.h3,
-                                    )
+                                    Text(text = (index + 1).toString(), style = MaterialTheme.typography.h3)
 
                                     FootballImage(
                                         modifier = Modifier
@@ -139,41 +99,13 @@ fun LeagueTableScreen(
                                         url = tableItem.crestUrl
                                     )
 
-                                    Text(
-                                        text = tableItem.name,
-                                        Modifier
-                                            .fillMaxWidth(0.375f),
-                                        style = MaterialTheme.typography.h3,
-                                    )
-
-                                    Text(
-                                        text = tableItem.playedGames,
-                                        style = MaterialTheme.typography.h3,
-                                    )
-
-                                    Text(
-                                        text = tableItem.won,
-                                        style = MaterialTheme.typography.h3,
-                                    )
-
-                                    Text(
-                                        text = tableItem.draw,
-                                        style = MaterialTheme.typography.h3,
-                                    )
-
-                                    Text(
-                                        text = tableItem.lost,
-                                        style = MaterialTheme.typography.h3,
-                                    )
-                                    Text(
-                                        text = tableItem.goalDifference,
-                                        style = MaterialTheme.typography.h3,
-                                    )
-                                    Text(
-                                        text =
-                                        tableItem.points,
-                                        style = MaterialTheme.typography.h3,
-                                    )
+                                    Text(text = tableItem.name, Modifier.fillMaxWidth(0.375f), style = MaterialTheme.typography.h3)
+                                    Text(text = tableItem.playedGames, style = MaterialTheme.typography.h3)
+                                    Text(text = tableItem.won, style = MaterialTheme.typography.h3)
+                                    Text(text = tableItem.draw, style = MaterialTheme.typography.h3)
+                                    Text(text = tableItem.lost, style = MaterialTheme.typography.h3)
+                                    Text(text = tableItem.goalDifference, style = MaterialTheme.typography.h3)
+                                    Text(text = tableItem.points, style = MaterialTheme.typography.h3)
                                 }
                             }
                         }
