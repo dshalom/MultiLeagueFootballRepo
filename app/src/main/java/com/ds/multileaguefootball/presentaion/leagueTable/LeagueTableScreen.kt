@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -78,6 +78,11 @@ fun LeagueTableScreen(
                             )
 
                             Text(
+                                text = "",
+                                style = MaterialTheme.typography.h3,
+                            )
+
+                            Text(
                                 text = "P",
                                 style = MaterialTheme.typography.h3,
                             )
@@ -109,7 +114,7 @@ fun LeagueTableScreen(
                         }
 
                         LazyColumn {
-                            items(table) { tableItem ->
+                            itemsIndexed(table) { index, tableItem ->
 
                                 Row(
                                     modifier =
@@ -121,6 +126,11 @@ fun LeagueTableScreen(
                                     horizontalArrangement = Arrangement.SpaceEvenly
 
                                 ) {
+                                    Text(
+                                        text = (index + 1).toString(),
+
+                                        style = MaterialTheme.typography.h3,
+                                    )
 
                                     FootballImage(
                                         modifier = Modifier
