@@ -59,8 +59,11 @@ class MainActivity : ComponentActivity() {
                                         label = { Text(stringResource(screen.resourceId)) },
                                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                                         onClick = {
-                                            navController.navigate(screen.route) {
-                                                restoreState = true
+
+                                            if (currentDestination?.route?.contains(screen.route) == false) {
+                                                navController.navigate(screen.route) {
+                                                    restoreState = true
+                                                }
                                             }
                                         }
                                     )
