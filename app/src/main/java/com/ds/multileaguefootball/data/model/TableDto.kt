@@ -20,16 +20,16 @@ data class TableDto(
         return TableEntry(
             id = team.id,
             name = team.name,
-            draw = draw,
-            goalDifference = goalDifference,
-            goalsAgainst = goalsAgainst,
-            goalsFor = goalsFor,
-            lost = lost,
-            playedGames = playedGames,
-            points = points,
-            position = position,
-            crestUrl = team.crestUrl,
-            won = won
+            draw = draw.toString(),
+            goalDifference = goalDifference.toString(),
+            goalsAgainst = goalsAgainst.toString(),
+            goalsFor = goalsFor.toString(),
+            lost = lost.toString(),
+            playedGames = playedGames.toString(),
+            points = points.toString(),
+            position = position.toString(),
+            crestUrl = team.crestUrl ?: "",
+            won = won.toString()
         )
     }
 }

@@ -6,18 +6,18 @@ data class Standings(
 )
 
 data class TableEntry(
-    val crestUrl: String?,
+    val crestUrl: String,
     val id: Int,
     val name: String,
-    val draw: Int,
-    val goalDifference: Int,
-    val goalsAgainst: Int,
-    val goalsFor: Int,
-    val lost: Int,
-    val playedGames: Int,
-    val points: Int,
-    val position: Int,
-    val won: Int
+    val draw: String,
+    val goalDifference: String,
+    val goalsAgainst: String,
+    val goalsFor: String,
+    val lost: String,
+    val playedGames: String,
+    val points: String,
+    val position: String,
+    val won: String
 )
 
 data class Competition(
@@ -28,5 +28,5 @@ data class Competition(
     val currentSeasonId: Int?,
     val currentSeasonStartDate: String?,
     val currentSeasonEndDate: String?,
-    val ensignUrl: String?
+    val ensignUrl: String
 )

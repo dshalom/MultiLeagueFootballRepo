@@ -23,7 +23,7 @@ data class CompetitionDto(
             currentSeasonId = currentSeason?.id,
             currentSeasonStartDate = currentSeason?.startDate,
             currentSeasonEndDate = currentSeason?.endDate,
-            ensignUrl = area?.ensignUrl
+            ensignUrl = area?.ensignUrl ?: ""
         )
     }
 }

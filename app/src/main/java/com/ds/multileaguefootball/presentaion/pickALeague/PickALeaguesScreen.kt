@@ -1,7 +1,6 @@
 package com.ds.multileaguefootball.presentaion.pickALeague
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,28 +10,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.ImageLoader
-import coil.compose.LocalImageLoader
-import coil.compose.rememberImagePainter
 import coil.decode.SvgDecoder
 import com.ds.multileaguefootball.domain.model.Competition
 import com.ds.multileaguefootball.presentaion.common.ErrorScreen
+import com.ds.multileaguefootball.presentaion.common.FootballImage
 import com.ds.multileaguefootball.presentaion.common.LoadingScreen
 import com.ds.multileaguefootball.presentaion.util.Screen
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
@@ -52,18 +46,10 @@ fun PickALeagueScreen(
         }
         else -> {
             viewState.data?.let { competition ->
-                val context = LocalContext.current
-                val imageLoader = remember {
-                    ImageLoader.Builder(context)
-                        .componentRegistry {
-                            add(SvgDecoder(context))
-                        }
-                        .build()
-                }
 
                 LazyColumn {
                     items(competition) { item ->
-                        LeagueItem(imageLoader, item) { leagueId ->
+                        LeagueItem(item) { leagueId ->
                             navController.navigate(Screen.LeagueTable.route + "?leagueId=$leagueId")
                         }
                     }
@@ -74,7 +60,7 @@ fun PickALeagueScreen(
 }
 
 @Composable
-fun LeagueItem(imageLoader: ImageLoader, competition: Competition, onclick: (Int) -> Unit) {
+fun LeagueItem(competition: Competition, onclick: (Int) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -84,26 +70,18 @@ fun LeagueItem(imageLoader: ImageLoader, competition: Competition, onclick: (Int
     ) {
 
         Spacer(modifier = Modifier.width(16.dp))
-        CompositionLocalProvider(LocalImageLoader provides imageLoader) {
-            val painter = rememberImagePainter(
-                data = competition.ensignUrl
-            )
 
-            Image(
-                painter = painter,
-                contentDescription = "SVG Image",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(4.dp)),
-                contentScale = ContentScale.FillBounds
-            )
-        }
+        FootballImage(
+            modifier = Modifier
+                .size(60.dp),
+            context = LocalContext.current, url = competition.ensignUrl!!
+        )
 
         Spacer(modifier = Modifier.width(16.dp))
 
         Text(
             text = competition.name,
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.h2
         )
     }
 }
@@ -139,7 +117,6 @@ private fun PrimaryButtonPreview() {
     )
     MultiLeagueFootballTheme {
         LeagueItem(
-            imageLoader = imageLoader,
             competition = competition
         ) {
         }
