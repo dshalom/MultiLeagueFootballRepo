@@ -61,7 +61,14 @@ class MainActivity : ComponentActivity() {
                                         onClick = {
 
                                             if (currentDestination?.route?.contains(screen.route) == false) {
-                                                navController.navigate(screen.route) {
+
+                                                val route =
+                                                    if (screen.route == Screen.PickALeague.route) {
+                                                        screen.route + "/true"
+                                                    } else {
+                                                        screen.route
+                                                    }
+                                                navController.navigate(route) {
                                                     restoreState = true
                                                 }
                                             }
@@ -73,13 +80,24 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController,
-                            startDestination = Screen.PickALeague.route,
+                            startDestination = Screen.PickALeague.route + "/{userAction}",
                             Modifier.padding(innerPadding)
                         ) {
 
-                            composable(Screen.PickALeague.route) {
+                            composable(
+                                route = Screen.PickALeague.route + "/{userAction}",
+                                arguments = listOf(
+                                    navArgument("userAction") {
+                                        type = NavType.BoolType
+                                        defaultValue = false
+                                    }
+                                )
+
+                            ) { backStackEntry ->
+
                                 PickALeagueScreen(
-                                    navController
+                                    navController,
+                                    backStackEntry.arguments?.getBoolean("userAction") ?: false
                                 )
                             }
 

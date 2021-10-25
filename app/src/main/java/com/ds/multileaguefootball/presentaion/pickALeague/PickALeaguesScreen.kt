@@ -34,8 +34,10 @@ import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 @Composable
 fun PickALeagueScreen(
     navController: NavHostController,
+    userAction: Boolean,
     pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
+
     val viewState = pickALeagueViewModel.viewState.collectAsState().value
     when {
         viewState.loading -> {
