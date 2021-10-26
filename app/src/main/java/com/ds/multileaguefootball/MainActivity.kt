@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
 
                                                 val route =
                                                     if (screen.route == Screen.PickALeague.route) {
-                                                        screen.route + "/true"
+                                                        "${screen.route}/true"
                                                     } else {
                                                         screen.route
                                                     }
@@ -80,12 +80,12 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController,
-                            startDestination = Screen.PickALeague.route + "/{userAction}",
+                            startDestination = "${Screen.PickALeague.route}/{userAction}",
                             Modifier.padding(innerPadding)
                         ) {
 
                             composable(
-                                route = Screen.PickALeague.route + "/{userAction}",
+                                route = "${Screen.PickALeague.route}/{userAction}",
                                 arguments = listOf(
                                     navArgument("userAction") {
                                         type = NavType.BoolType
@@ -94,7 +94,6 @@ class MainActivity : ComponentActivity() {
                                 )
 
                             ) { backStackEntry ->
-
                                 PickALeagueScreen(
                                     navController,
                                     backStackEntry.arguments?.getBoolean("userAction") ?: false
@@ -102,7 +101,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(
-                                route = LeagueTable.route + "?leagueId={leagueId}",
+                                route = "${LeagueTable.route}/{leagueId}",
                                 arguments = listOf(
                                     navArgument("leagueId") {
                                         type = NavType.IntType

@@ -52,7 +52,7 @@ fun PickALeagueScreen(
                 LazyColumn {
                     items(competition) { item ->
                         LeagueItem(item) { leagueId ->
-                            navController.navigate(Screen.LeagueTable.route + "?leagueId=$leagueId")
+                            navController.navigate("${Screen.LeagueTable.route}/$leagueId")
                         }
                     }
                 }
