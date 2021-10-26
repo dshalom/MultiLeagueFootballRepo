@@ -12,6 +12,7 @@ class FetchLeaguesUseCase @Inject constructor(
 ) : BaseUseCase<Unit, List<Competition>> {
 
     override suspend fun invoke(other: Unit) = flow {
+        emit(Resource.Loading())
         try {
             val result = repo.fetchLeagues()
                 .filter {

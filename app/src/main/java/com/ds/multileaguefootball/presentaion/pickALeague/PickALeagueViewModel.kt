@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ds.multileaguefootball.domain.common.Resource
 import com.ds.multileaguefootball.domain.usecases.FetchLeaguesUseCase
+import com.ds.multileaguefootball.domain.usecases.LeagueNavUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,18 +13,38 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PickALeagueViewModel @Inject constructor(private val fetchLeaguesUseCase: FetchLeaguesUseCase) :
+class PickALeagueViewModel @Inject constructor(
+    private val fetchLeaguesUseCase: FetchLeaguesUseCase,
+    private val leagueNavUseCase: LeagueNavUseCase
+) :
     ViewModel() {
 
     private val _viewState: MutableStateFlow<PickALeagueState> =
         MutableStateFlow(PickALeagueState(null, false))
     val viewState: StateFlow<PickALeagueState> = _viewState
 
-    init {
-        fetchLeagues()
+    private val _navigateTo: MutableStateFlow<Int> =
+        MutableStateFlow(0)
+
+    val navigateTo: StateFlow<Int> = _navigateTo
+
+    fun luc(userAction: Boolean) {
+
+        viewModelScope.launch {
+
+            leagueNavUseCase.getStoredLeagueId(userAction = userAction).collect {
+                _navigateTo.value = it ?: 0
+            }
+        }
     }
 
-    private fun fetchLeagues() {
+    fun storeLeagueId(leagueId: Int) {
+        viewModelScope.launch {
+            leagueNavUseCase.storeLeagueId(leagueId = leagueId)
+        }
+    }
+
+    fun fetchLeagues() {
         viewModelScope.launch {
             val result = fetchLeaguesUseCase(Unit)
             result.collect {

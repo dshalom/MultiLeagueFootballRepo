@@ -59,9 +59,7 @@ class MainActivity : ComponentActivity() {
                                         label = { Text(stringResource(screen.resourceId)) },
                                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                                         onClick = {
-
                                             if (currentDestination?.route?.contains(screen.route) == false) {
-
                                                 val route =
                                                     if (screen.route == Screen.PickALeague.route) {
                                                         "${screen.route}/true"
@@ -101,17 +99,10 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(
-                                route = "${LeagueTable.route}/{leagueId}",
-                                arguments = listOf(
-                                    navArgument("leagueId") {
-                                        type = NavType.IntType
-                                        defaultValue = 0
-                                    }
-                                )
-                            ) { backStackEntry ->
+                                route = LeagueTable.route,
+                            ) {
                                 LeagueTableScreen(
-                                    navController,
-                                    backStackEntry.arguments?.getInt("leagueId") ?: 0
+                                    navController
                                 )
                             }
                         }

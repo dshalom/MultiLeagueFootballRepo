@@ -30,15 +30,12 @@ import com.ds.multileaguefootball.presentaion.common.LoadingScreen
 @Composable
 fun LeagueTableScreen(
     navController: NavHostController,
-    leagueId: Int,
     leagueTableViewModel: LeagueTableViewModel = hiltViewModel()
 ) {
     val viewState = leagueTableViewModel.viewState.collectAsState().value
 
-    if (leagueId != 0) {
-        LaunchedEffect(true) {
-            leagueTableViewModel.fetchStandings(leagueId = leagueId)
-        }
+    LaunchedEffect(true) {
+        leagueTableViewModel.onStart()
     }
 
     when {
@@ -90,7 +87,10 @@ fun LeagueTableScreen(
                                     horizontalArrangement = Arrangement.SpaceEvenly
 
                                 ) {
-                                    Text(text = (index + 1).toString(), style = MaterialTheme.typography.h3)
+                                    Text(
+                                        text = (index + 1).toString(),
+                                        style = MaterialTheme.typography.h3
+                                    )
 
                                     FootballImage(
                                         modifier = Modifier
@@ -99,13 +99,26 @@ fun LeagueTableScreen(
                                         url = tableItem.crestUrl
                                     )
 
-                                    Text(text = tableItem.name, Modifier.fillMaxWidth(0.375f), style = MaterialTheme.typography.h3)
-                                    Text(text = tableItem.playedGames, style = MaterialTheme.typography.h3)
+                                    Text(
+                                        text = tableItem.name,
+                                        Modifier.fillMaxWidth(0.375f),
+                                        style = MaterialTheme.typography.h3
+                                    )
+                                    Text(
+                                        text = tableItem.playedGames,
+                                        style = MaterialTheme.typography.h3
+                                    )
                                     Text(text = tableItem.won, style = MaterialTheme.typography.h3)
                                     Text(text = tableItem.draw, style = MaterialTheme.typography.h3)
                                     Text(text = tableItem.lost, style = MaterialTheme.typography.h3)
-                                    Text(text = tableItem.goalDifference, style = MaterialTheme.typography.h3)
-                                    Text(text = tableItem.points, style = MaterialTheme.typography.h3)
+                                    Text(
+                                        text = tableItem.goalDifference,
+                                        style = MaterialTheme.typography.h3
+                                    )
+                                    Text(
+                                        text = tableItem.points,
+                                        style = MaterialTheme.typography.h3
+                                    )
                                 }
                             }
                         }

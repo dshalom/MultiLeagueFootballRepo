@@ -1,14 +1,20 @@
 package com.ds.multileaguefootball.di
 
+import android.content.Context
 import android.util.Log
 import com.ds.multileaguefootball.BuildConfig
 import com.ds.multileaguefootball.data.InMemoryCache
 import com.ds.multileaguefootball.data.httpclient.ApiServiceImpl
 import com.ds.multileaguefootball.data.repo.RepoImpl
 import com.ds.multileaguefootball.domain.repo.Repo
+import com.ds.multileaguefootball.domain.usecases.DataStoreManager
+import com.ds.multileaguefootball.domain.usecases.DataStoreManagerImpl
+import com.ds.multileaguefootball.domain.usecases.LeagueNavUseCase
+import com.ds.multileaguefootball.domain.usecases.LeagueNavUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -89,5 +95,17 @@ object AppModule {
     @Singleton
     fun provideAvailableLeagueCodes(): List<Int> {
         return listOf(2002, 2003, 2014, 2015, 2016, 2017, 2019)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(@ApplicationContext appContext: Context): DataStoreManager {
+        return DataStoreManagerImpl(context = appContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLeagueNavUseCase(dataStoreManager: DataStoreManager): LeagueNavUseCase {
+        return LeagueNavUseCaseImpl(dataStoreManager)
     }
 }

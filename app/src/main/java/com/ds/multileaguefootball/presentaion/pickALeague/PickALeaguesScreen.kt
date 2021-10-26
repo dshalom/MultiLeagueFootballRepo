@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,24 +39,44 @@ fun PickALeagueScreen(
     pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
 
-    val viewState = pickALeagueViewModel.viewState.collectAsState().value
-    when {
-        viewState.loading -> {
-            LoadingScreen()
-        }
-        viewState.error -> {
-            ErrorScreen()
-        }
-        else -> {
-            viewState.data?.let { competition ->
+    val navTo = pickALeagueViewModel.navigateTo.collectAsState().value
+    LaunchedEffect(key1 = true) {
+        pickALeagueViewModel.luc(userAction)
+    }
 
-                LazyColumn {
-                    items(competition) { item ->
-                        LeagueItem(item) { leagueId ->
-                            navController.navigate("${Screen.LeagueTable.route}/$leagueId")
+    val viewState = pickALeagueViewModel.viewState.collectAsState().value
+
+    when (navTo) {
+        0 -> {
+
+            pickALeagueViewModel.fetchLeagues()
+
+            when {
+                viewState.loading -> {
+                    LoadingScreen()
+                }
+                viewState.error -> {
+                    ErrorScreen()
+                }
+                else -> {
+                    viewState.data?.let { competition ->
+
+                        LazyColumn {
+                            items(competition) { item ->
+                                LeagueItem(item) { leagueId ->
+                                    pickALeagueViewModel.storeLeagueId(leagueId)
+                                    navController.navigate(Screen.LeagueTable.route)
+                                }
+                            }
                         }
                     }
                 }
+            }
+        }
+        else -> {
+
+            LaunchedEffect(key1 = true) {
+                navController.navigate(Screen.LeagueTable.route)
             }
         }
     }
