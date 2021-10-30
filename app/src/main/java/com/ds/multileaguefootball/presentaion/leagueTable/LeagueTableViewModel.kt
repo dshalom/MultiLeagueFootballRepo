@@ -26,7 +26,7 @@ class LeagueTableViewModel @Inject constructor(
     fun onStart() {
         viewModelScope.launch {
 
-            leagueNavUseCase.getStoredLeagueId(userAction = false)
+            leagueNavUseCase.getStoredLeagueId()
                 .collect {
                     it?.let { leagueId ->
                         val result = fetchStandingsUseCase(leagueId = leagueId)

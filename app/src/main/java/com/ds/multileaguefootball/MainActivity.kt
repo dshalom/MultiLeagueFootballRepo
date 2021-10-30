@@ -24,8 +24,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
 import com.ds.multileaguefootball.presentaion.pickALeague.PickALeagueScreen
-import com.ds.multileaguefootball.presentaion.util.Screen
 import com.ds.multileaguefootball.presentaion.util.Screen.LeagueTable
+import com.ds.multileaguefootball.presentaion.util.Screen.PickALeague
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
                     val items = listOf(
                         LeagueTable,
-                        Screen.PickALeague,
+                        PickALeague,
                     )
 
                     Scaffold(
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                                         onClick = {
                                             if (currentDestination?.route?.contains(screen.route) == false) {
                                                 val route =
-                                                    if (screen.route == Screen.PickALeague.route) {
+                                                    if (screen.route == PickALeague.route) {
                                                         "${screen.route}/true"
                                                     } else {
                                                         screen.route
@@ -78,12 +78,12 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController,
-                            startDestination = "${Screen.PickALeague.route}/{userAction}",
+                            startDestination = "${PickALeague.route}/{userAction}",
                             Modifier.padding(innerPadding)
                         ) {
 
                             composable(
-                                route = "${Screen.PickALeague.route}/{userAction}",
+                                route = "${PickALeague.route}/{userAction}",
                                 arguments = listOf(
                                     navArgument("userAction") {
                                         type = NavType.BoolType

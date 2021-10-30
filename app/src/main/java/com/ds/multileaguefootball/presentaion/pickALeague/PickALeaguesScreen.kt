@@ -38,45 +38,51 @@ fun PickALeagueScreen(
     userAction: Boolean,
     pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
+    if (userAction) {
+        fetchLeagues(pickALeagueViewModel, navController)
+    } else {
+        val navTo = pickALeagueViewModel.navigateTo.collectAsState().value
+        LaunchedEffect(key1 = true) {
+            pickALeagueViewModel.getStoredLeague()
+        }
 
-    val navTo = pickALeagueViewModel.navigateTo.collectAsState().value
-    LaunchedEffect(key1 = true) {
-        pickALeagueViewModel.luc(userAction)
-    }
-
-    val viewState = pickALeagueViewModel.viewState.collectAsState().value
-
-    when (navTo) {
-        0 -> {
-
-            pickALeagueViewModel.fetchLeagues()
-
-            when {
-                viewState.loading -> {
-                    LoadingScreen()
-                }
-                viewState.error -> {
-                    ErrorScreen()
-                }
-                else -> {
-                    viewState.data?.let { competition ->
-
-                        LazyColumn {
-                            items(competition) { item ->
-                                LeagueItem(item) { leagueId ->
-                                    pickALeagueViewModel.storeLeagueId(leagueId)
-                                    navController.navigate(Screen.LeagueTable.route)
-                                }
-                            }
-                        }
-                    }
+        when (navTo) {
+            0 -> {
+                fetchLeagues(pickALeagueViewModel, navController)
+            }
+            else -> {
+                LaunchedEffect(key1 = true) {
+                    navController.navigate(Screen.LeagueTable.route)
                 }
             }
         }
-        else -> {
+    }
+}
 
-            LaunchedEffect(key1 = true) {
-                navController.navigate(Screen.LeagueTable.route)
+@Composable
+private fun fetchLeagues(
+    pickALeagueViewModel: PickALeagueViewModel,
+    navController: NavHostController
+) {
+    val viewState = pickALeagueViewModel.viewState.collectAsState().value
+    pickALeagueViewModel.fetchLeagues()
+    when {
+        viewState.loading -> {
+            LoadingScreen()
+        }
+        viewState.error -> {
+            ErrorScreen()
+        }
+        else -> {
+            viewState.data?.let { competition ->
+                LazyColumn {
+                    items(competition) { item ->
+                        LeagueItem(item) { leagueId ->
+                            pickALeagueViewModel.storeLeagueId(leagueId)
+                            navController.navigate(Screen.LeagueTable.route)
+                        }
+                    }
+                }
             }
         }
     }

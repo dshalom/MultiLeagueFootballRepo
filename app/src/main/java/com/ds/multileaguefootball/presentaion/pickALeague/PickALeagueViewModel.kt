@@ -28,11 +28,11 @@ class PickALeagueViewModel @Inject constructor(
 
     val navigateTo: StateFlow<Int> = _navigateTo
 
-    fun luc(userAction: Boolean) {
+    fun getStoredLeague() {
 
         viewModelScope.launch {
 
-            leagueNavUseCase.getStoredLeagueId(userAction = userAction).collect {
+            leagueNavUseCase.getStoredLeagueId().collect {
                 _navigateTo.value = it ?: 0
             }
         }
