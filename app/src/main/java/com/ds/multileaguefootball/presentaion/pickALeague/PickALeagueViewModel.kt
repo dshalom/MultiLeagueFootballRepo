@@ -24,14 +24,16 @@ class PickALeagueViewModel @Inject constructor(
     val viewState: StateFlow<PickALeagueState> = _viewState
 
     private val _navigateTo: MutableStateFlow<Int> =
-        MutableStateFlow(0)
+        MutableStateFlow(-1)
 
     val navigateTo: StateFlow<Int> = _navigateTo
 
-    fun getStoredLeague() {
+    init {
+        getStoredLeague()
+    }
 
+    private fun getStoredLeague() {
         viewModelScope.launch {
-
             leagueNavUseCase.getStoredLeagueId().collect {
                 _navigateTo.value = it ?: 0
             }

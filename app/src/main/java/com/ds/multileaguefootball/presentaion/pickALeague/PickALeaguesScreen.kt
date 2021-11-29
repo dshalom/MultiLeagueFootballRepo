@@ -39,16 +39,13 @@ fun PickALeagueScreen(
     pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
     if (userAction) {
-        fetchLeagues(pickALeagueViewModel, navController)
-    } else {
-        val navTo = pickALeagueViewModel.navigateTo.collectAsState().value
-        LaunchedEffect(key1 = true) {
-            pickALeagueViewModel.getStoredLeague()
-        }
-
-        when (navTo) {
+        fetcThehLeagues(pickALeagueViewModel, navController)
+    } else
+        when (pickALeagueViewModel.navigateTo.collectAsState().value) {
+            -1 -> {
+            }
             0 -> {
-                fetchLeagues(pickALeagueViewModel, navController)
+                fetcThehLeagues(pickALeagueViewModel, navController)
             }
             else -> {
                 LaunchedEffect(key1 = true) {
@@ -56,16 +53,18 @@ fun PickALeagueScreen(
                 }
             }
         }
-    }
 }
 
 @Composable
-private fun fetchLeagues(
+private fun fetcThehLeagues(
     pickALeagueViewModel: PickALeagueViewModel,
     navController: NavHostController
 ) {
     val viewState = pickALeagueViewModel.viewState.collectAsState().value
-    pickALeagueViewModel.fetchLeagues()
+
+    LaunchedEffect(key1 = true) {
+        pickALeagueViewModel.fetchLeagues()
+    }
     when {
         viewState.loading -> {
             LoadingScreen()
