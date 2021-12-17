@@ -39,13 +39,13 @@ fun PickALeagueScreen(
     pickALeagueViewModel: PickALeagueViewModel = hiltViewModel()
 ) {
     if (userAction) {
-        fetcThehLeagues(pickALeagueViewModel, navController)
+        fetchLeagues(pickALeagueViewModel, navController)
     } else
         when (pickALeagueViewModel.navigateTo.collectAsState().value) {
             -1 -> {
             }
             0 -> {
-                fetcThehLeagues(pickALeagueViewModel, navController)
+                fetchLeagues(pickALeagueViewModel, navController)
             }
             else -> {
                 LaunchedEffect(key1 = true) {
@@ -56,7 +56,7 @@ fun PickALeagueScreen(
 }
 
 @Composable
-private fun fetcThehLeagues(
+private fun fetchLeagues(
     pickALeagueViewModel: PickALeagueViewModel,
     navController: NavHostController
 ) {
