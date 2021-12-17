@@ -1,5 +1,6 @@
 package com.ds.multileaguefootball.presentaion.leagueTable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.ds.multileaguefootball.domain.model.TableEntry
 import com.ds.multileaguefootball.presentaion.common.ErrorScreen
 import com.ds.multileaguefootball.presentaion.common.FootballImage
 import com.ds.multileaguefootball.presentaion.common.LoadingScreen
@@ -76,49 +78,8 @@ fun LeagueTableScreen(
 
                         LazyColumn {
                             itemsIndexed(table) { index, tableItem ->
+                                LeagueItem(index, tableItem){
 
-                                Row(
-                                    modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 6.dp),
-
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceEvenly
-
-                                ) {
-                                    Text(
-                                        text = (index + 1).toString(),
-                                        style = MaterialTheme.typography.h3
-                                    )
-
-                                    FootballImage(
-                                        modifier = Modifier
-                                            .size(40.dp),
-                                        context = LocalContext.current,
-                                        url = tableItem.crestUrl
-                                    )
-
-                                    Text(
-                                        text = tableItem.name,
-                                        Modifier.fillMaxWidth(0.375f),
-                                        style = MaterialTheme.typography.h3
-                                    )
-                                    Text(
-                                        text = tableItem.playedGames,
-                                        style = MaterialTheme.typography.h3
-                                    )
-                                    Text(text = tableItem.won, style = MaterialTheme.typography.h3)
-                                    Text(text = tableItem.draw, style = MaterialTheme.typography.h3)
-                                    Text(text = tableItem.lost, style = MaterialTheme.typography.h3)
-                                    Text(
-                                        text = tableItem.goalDifference,
-                                        style = MaterialTheme.typography.h3
-                                    )
-                                    Text(
-                                        text = tableItem.points,
-                                        style = MaterialTheme.typography.h3
-                                    )
                                 }
                             }
                         }
@@ -126,5 +87,58 @@ fun LeagueTableScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LeagueItem(
+    index: Int,
+    tableItem: TableEntry,
+    leagueItemClicked: (id: Int) -> Unit
+) {
+    Row(
+        modifier =
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp)
+            .clickable {
+                leagueItemClicked(tableItem.id)
+            },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+
+    ) {
+        Text(
+            text = (index + 1).toString(),
+            style = MaterialTheme.typography.h3
+        )
+
+        FootballImage(
+            modifier = Modifier
+                .size(40.dp),
+            context = LocalContext.current,
+            url = tableItem.crestUrl
+        )
+
+        Text(
+            text = tableItem.name,
+            Modifier.fillMaxWidth(0.375f),
+            style = MaterialTheme.typography.h3
+        )
+        Text(
+            text = tableItem.playedGames,
+            style = MaterialTheme.typography.h3
+        )
+        Text(text = tableItem.won, style = MaterialTheme.typography.h3)
+        Text(text = tableItem.draw, style = MaterialTheme.typography.h3)
+        Text(text = tableItem.lost, style = MaterialTheme.typography.h3)
+        Text(
+            text = tableItem.goalDifference,
+            style = MaterialTheme.typography.h3
+        )
+        Text(
+            text = tableItem.points,
+            style = MaterialTheme.typography.h3
+        )
     }
 }
