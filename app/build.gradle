@@ -6,6 +6,9 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+def props = new Properties()
+file("../secrets.properties").withInputStream { props.load(it) }
+
 android {
     compileSdk 31
 
@@ -20,7 +23,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        buildConfigField("String", "APP_KEY", API_KEY)
+        buildConfigField("String", "APP_KEY", props.getProperty("API_KEY"))
     }
 
     buildTypes {
@@ -100,4 +103,11 @@ dependencies {
 
 kapt {
     correctErrorTypes true
+}
+
+
+
+task printProps {
+    doFirst {
+        println props.getProperty("API_KEY")}
 }

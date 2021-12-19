@@ -9,9 +9,10 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
 
     steps:
+ 
       - uses: actions/checkout@v2
       - name: set up JDK 11
         uses: actions/setup-java@v2
@@ -20,9 +21,11 @@ jobs:
           distribution: 'adopt'
           cache: gradle
 
+      - name: Decode secrets.properties file
+        env:
+          SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
+        run: echo "$SECRETS_PROPERTIES" | base64 -d > ./secrets.properties
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
         run: ./gradlew build
