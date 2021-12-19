@@ -3,29 +3,25 @@ package com.ds.multileaguefootball
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.getValue
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.primarySurface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
-import com.ds.multileaguefootball.presentaion.pickALeague.PickALeagueScreen
-import com.ds.multileaguefootball.presentaion.util.Screen.LeagueTable
-import com.ds.multileaguefootball.presentaion.util.Screen.PickALeague
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,72 +39,43 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
 
-                    val items = listOf(
-                        LeagueTable,
-                        PickALeague,
-                    )
-
                     Scaffold(
-                        bottomBar = {
-                            BottomNavigation {
-                                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                                val currentDestination = navBackStackEntry?.destination
-                                items.forEach { screen ->
-                                    BottomNavigationItem(
-                                        icon = { Icon(screen.icon, contentDescription = null) },
-                                        label = { Text(stringResource(screen.resourceId)) },
-                                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                                        onClick = {
-                                            if (currentDestination?.route?.contains(screen.route) == false) {
-                                                val route =
-                                                    if (screen.route == PickALeague.route) {
-                                                        "${screen.route}/true"
-                                                    } else {
-                                                        screen.route
-                                                    }
-                                                navController.navigate(route) {
-                                                    restoreState = true
-                                                }
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    ) { innerPadding ->
-                        NavHost(
-                            navController,
-                            startDestination = "${PickALeague.route}/{userAction}",
-                            Modifier.padding(innerPadding)
-                        ) {
+                        topBar = { TopAppBarSample() },
 
-                            composable(
-                                route = "${PickALeague.route}/{userAction}",
-                                arguments = listOf(
-                                    navArgument("userAction") {
-                                        type = NavType.BoolType
-                                        defaultValue = false
-                                    }
-                                )
-
-                            ) { backStackEntry ->
-                                PickALeagueScreen(
-                                    navController,
-                                    backStackEntry.arguments?.getBoolean("userAction") ?: false
-                                )
-                            }
-
-                            composable(
-                                route = LeagueTable.route,
-                            ) {
-                                LeagueTableScreen(
-                                    navController
-                                )
-                            }
-                        }
+                    ) {
+                        LeagueTableScreen(
+                            navController
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun TopAppBarSample() {
+    Column {
+        TopAppBar(
+            elevation = 4.dp,
+            title = {
+                Text("I'm a TopAppBar")
+            },
+            backgroundColor = MaterialTheme.colors.primarySurface,
+            navigationIcon = {
+                IconButton(onClick = { /* Do Something*/ }) {
+                    Icon(Icons.Filled.ArrowBack, null)
+                }
+            }, actions = {
+            IconButton(onClick = { /* Do Something*/ }) {
+                Icon(Icons.Filled.Share, null)
+            }
+            IconButton(onClick = { /* Do Something*/ }) {
+                Icon(Icons.Filled.Settings, null)
+            }
+        }
+        )
+
+        Text("Hello World")
     }
 }
