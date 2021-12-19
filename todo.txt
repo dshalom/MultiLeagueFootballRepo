@@ -22,3 +22,5 @@ team screen: Played games, upcoming games, players, any stats
 persist team in its own tab
 
 rework navigation, remove bottom nav
+
+add menu item
