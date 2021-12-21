@@ -3,38 +3,81 @@ package com.ds.multileaguefootball
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.ds.multileaguefootball.domain.model.Competition
+import com.ds.multileaguefootball.presentaion.common.ErrorScreen
+import com.ds.multileaguefootball.presentaion.common.FootballImage
+import com.ds.multileaguefootball.presentaion.common.LoadingScreen
 import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
-import com.ds.multileaguefootball.presentaion.pickALeague.PickALeagueScreen
-import com.ds.multileaguefootball.presentaion.util.Screen.LeagueTable
-import com.ds.multileaguefootball.presentaion.util.Screen.PickALeague
+import com.ds.multileaguefootball.presentaion.pickALeague.PickALeagueViewModel
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val leagueTableViewModel by viewModels<PickALeagueViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
+
+            var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
+            var data by remember {
+                mutableStateOf(
+                    listOf(
+                        Competition(5, "EPL", "UK", "UK", 4, "", "", ""),
+                        Competition(5, "SPL", "UK", "UK", 4, "", "", ""),
+                        Competition(5, "EFL", "UK", "UK", 4, "", "", "")
+                    )
+                )
+            }
+
+            leagueTableViewModel.fetchLeagues()
+            val viewState = leagueTableViewModel.viewState.collectAsState().value
+            when {
+                viewState.loading -> {
+                    LoadingScreen()
+                }
+                viewState.error -> {
+                    ErrorScreen()
+                }
+                else -> {
+                    data = viewState.data ?: emptyList()
+                }
+            }
+
             MultiLeagueFootballTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -43,72 +86,79 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
 
-                    val items = listOf(
-                        LeagueTable,
-                        PickALeague,
-                    )
-
                     Scaffold(
-                        bottomBar = {
-                            BottomNavigation {
-                                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                                val currentDestination = navBackStackEntry?.destination
-                                items.forEach { screen ->
-                                    BottomNavigationItem(
-                                        icon = { Icon(screen.icon, contentDescription = null) },
-                                        label = { Text(stringResource(screen.resourceId)) },
-                                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                                        onClick = {
-                                            if (currentDestination?.route?.contains(screen.route) == false) {
-                                                val route =
-                                                    if (screen.route == PickALeague.route) {
-                                                        "${screen.route}/true"
-                                                    } else {
-                                                        screen.route
-                                                    }
-                                                navController.navigate(route) {
-                                                    restoreState = true
-                                                }
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    ) { innerPadding ->
-                        NavHost(
-                            navController,
-                            startDestination = "${PickALeague.route}/{userAction}",
-                            Modifier.padding(innerPadding)
-                        ) {
-
-                            composable(
-                                route = "${PickALeague.route}/{userAction}",
-                                arguments = listOf(
-                                    navArgument("userAction") {
-                                        type = NavType.BoolType
-                                        defaultValue = false
+                        topBar = {
+                            TopAppBar(
+                                title = {
+                                    Text(text = appBarTitle)
+                                },
+                                actions = {
+                                    LeaguesMenu(data) {
+                                        appBarTitle = it.name
+                                        leagueTableViewModel.storeLeagueId(it.id)
                                     }
-                                )
-
-                            ) { backStackEntry ->
-                                PickALeagueScreen(
-                                    navController,
-                                    backStackEntry.arguments?.getBoolean("userAction") ?: false
-                                )
-                            }
-
-                            composable(
-                                route = LeagueTable.route,
-                            ) {
-                                LeagueTableScreen(
-                                    navController
-                                )
-                            }
+                                }
+                            )
                         }
+
+                    ) {
+                        LeagueTableScreen(
+                            navController
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
+    val expanded = remember { mutableStateOf(false) }
+
+    Box(
+        Modifier
+            .wrapContentSize(Alignment.TopStart)
+    ) {
+        IconButton(onClick = {
+            expanded.value = true
+        }) {
+            Icon(
+                Icons.Filled.MoreVert,
+                contentDescription = "More Menu"
+            )
+        }
+
+        DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
+
+            data.forEach {
+                DropdownMenuItem(onClick = {
+                    onClick(it)
+
+                    expanded.value = false
+                }) {
+
+                    LeagueMenuItem(it.name, it.ensignUrl)
+                }
+                Divider()
+            }
+        }
+    }
+}
+
+@Composable
+fun LeagueMenuItem(title: String, url: String) {
+    Row(
+        Modifier.fillMaxWidth(),
+    ) {
+
+        FootballImage(
+            modifier = Modifier
+                .size(20.dp),
+            context = LocalContext.current, url = url
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(text = title)
     }
 }
