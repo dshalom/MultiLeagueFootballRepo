@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ds.multileaguefootball.domain.common.Resource
 import com.ds.multileaguefootball.domain.usecases.FetchLeaguesUseCase
-import com.ds.multileaguefootball.domain.usecases.LeagueNavUseCase
+import com.ds.multileaguefootball.domain.usecases.SavedLeagueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PickALeagueViewModel @Inject constructor(
     private val fetchLeaguesUseCase: FetchLeaguesUseCase,
-    private val leagueNavUseCase: LeagueNavUseCase
+    private val savedLeagueUseCase: SavedLeagueUseCase
 ) :
     ViewModel() {
 
@@ -32,9 +32,9 @@ class PickALeagueViewModel @Inject constructor(
         getStoredLeague()
     }
 
-    private fun getStoredLeague() {
+    fun getStoredLeague() {
         viewModelScope.launch {
-            leagueNavUseCase.getStoredLeagueId().collect {
+            savedLeagueUseCase.getStoredLeagueId().collect {
                 _navigateTo.value = it ?: 0
             }
         }
@@ -42,7 +42,7 @@ class PickALeagueViewModel @Inject constructor(
 
     fun storeLeagueId(leagueId: Int) {
         viewModelScope.launch {
-            leagueNavUseCase.storeLeagueId(leagueId = leagueId)
+            savedLeagueUseCase.storeLeagueId(leagueId = leagueId)
         }
     }
 
