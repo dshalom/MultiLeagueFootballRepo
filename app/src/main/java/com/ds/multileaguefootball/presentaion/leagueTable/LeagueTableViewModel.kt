@@ -24,7 +24,6 @@ class LeagueTableViewModel @Inject constructor(
 
     fun onStart() {
         viewModelScope.launch {
-
             savedLeagueUseCase.getStoredLeagueId()
                 .collect {
                     it?.let { leagueId ->

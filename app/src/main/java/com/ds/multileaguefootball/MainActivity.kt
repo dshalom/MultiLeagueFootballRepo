@@ -25,6 +25,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,16 +56,9 @@ class MainActivity : ComponentActivity() {
 
             var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
             var data by remember {
-                mutableStateOf(
-                    listOf(
-                        Competition(5, "EPL", "UK", "UK", 4, "", "", ""),
-                        Competition(5, "SPL", "UK", "UK", 4, "", "", ""),
-                        Competition(5, "EFL", "UK", "UK", 4, "", "", "")
-                    )
-                )
+                mutableStateOf(emptyList<Competition>())
             }
 
-            leagueTableViewModel.fetchLeagues()
             val viewState = leagueTableViewModel.viewState.collectAsState().value
             when {
                 viewState.loading -> {
@@ -76,6 +70,9 @@ class MainActivity : ComponentActivity() {
                 else -> {
                     data = viewState.data ?: emptyList()
                 }
+            }
+            LaunchedEffect(true) {
+                leagueTableViewModel.fetchLeagues()
             }
 
             MultiLeagueFootballTheme {
