@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,10 +34,6 @@ fun LeagueTableScreen(
     leagueTableViewModel: LeagueTableViewModel = hiltViewModel()
 ) {
     val viewState = leagueTableViewModel.viewState.collectAsState().value
-
-    LaunchedEffect(true) {
-        leagueTableViewModel.onStart()
-    }
 
     when {
         viewState.loading -> {

@@ -23,41 +23,41 @@ class PickALeagueViewModel @Inject constructor(
         MutableStateFlow(PickALeagueState(null, false))
     val viewState: StateFlow<PickALeagueState> = _viewState
 
-    private val _navigateTo: MutableStateFlow<Int> =
-        MutableStateFlow(-1)
-
-    val navigateTo: StateFlow<Int> = _navigateTo
-
     init {
-        getStoredLeague()
-    }
-
-    fun getStoredLeague() {
-        viewModelScope.launch {
-            savedLeagueUseCase.getStoredLeagueId().collect {
-                _navigateTo.value = it ?: 0
-            }
-        }
+        fetchLeagues()
     }
 
     fun storeLeagueId(leagueId: Int) {
+        _viewState.value.data?.forEach {
+            it.selected = false
+        }
+
         viewModelScope.launch {
             savedLeagueUseCase.storeLeagueId(leagueId = leagueId)
         }
     }
 
-    fun fetchLeagues() {
+    private fun fetchLeagues() {
         viewModelScope.launch {
             val result = fetchLeaguesUseCase(Unit)
-            result.collect {
-                _viewState.value = when (it) {
+            result.collect { leaguesData ->
+                _viewState.value = when (leaguesData) {
                     is Resource.Error -> PickALeagueState(error = true)
                     is Resource.Loading -> PickALeagueState(loading = true)
                     is Resource.Success -> {
                         PickALeagueState(
-                            data = it.data,
+                            data = leaguesData.data,
                             error = false
                         )
+                    }
+                }
+                if (leaguesData is Resource.Success) {
+                    savedLeagueUseCase.getStoredLeagueId().collect { storedId ->
+                        storedId?.let {
+                            leaguesData.data?.first { it.id == storedId }?.selected = true
+                        } ?: kotlin.run {
+                            savedLeagueUseCase.storeLeagueId(leaguesData.data?.get(0)?.id ?: 0)
+                        }
                     }
                 }
             }

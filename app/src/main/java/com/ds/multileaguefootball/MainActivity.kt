@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +26,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
@@ -70,9 +71,6 @@ class MainActivity : ComponentActivity() {
                 else -> {
                     data = viewState.data ?: emptyList()
                 }
-            }
-            LaunchedEffect(true) {
-                leagueTableViewModel.fetchLeagues()
             }
 
             MultiLeagueFootballTheme {
@@ -129,13 +127,18 @@ fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
         DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
 
             data.forEach {
-                DropdownMenuItem(onClick = {
-                    onClick(it)
+                DropdownMenuItem(
+                    onClick = {
+                        onClick(it)
+                        expanded.value = false
+                    },
+                    modifier = Modifier.background(
+                        if (it.selected) MaterialTheme.colors.primary
+                        else Color.Transparent
+                    )
+                ) {
 
-                    expanded.value = false
-                }) {
-
-                    LeagueMenuItem(it.name, it.ensignUrl)
+                    LeagueMenuItem(it.name, it.ensignUrl, it.selected)
                 }
                 Divider()
             }
@@ -144,9 +147,10 @@ fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
 }
 
 @Composable
-fun LeagueMenuItem(title: String, url: String) {
+fun LeagueMenuItem(title: String, url: String, selected: Boolean) {
     Row(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth()
+
     ) {
 
         FootballImage(
