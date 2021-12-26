@@ -54,26 +54,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
-            var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
-            var data by remember {
-                mutableStateOf(emptyList<Competition>())
-            }
-
-            val viewState = leagueTableViewModel.viewState.collectAsState().value
-            when {
-                viewState.loading -> {
-                    LoadingScreen()
-                }
-                viewState.error -> {
-                    ErrorScreen()
-                }
-                else -> {
-                    data = viewState.data ?: emptyList()
-                }
-            }
-
             MultiLeagueFootballTheme {
+                var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
+                var data by remember {
+                    mutableStateOf(emptyList<Competition>())
+                }
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -97,9 +83,21 @@ class MainActivity : ComponentActivity() {
                         }
 
                     ) {
-                        LeagueTableScreen(
-                            navController
-                        )
+                        val viewState = leagueTableViewModel.viewState.collectAsState().value
+                        when {
+                            viewState.loading -> {
+                                LoadingScreen()
+                            }
+                            viewState.error -> {
+                                ErrorScreen()
+                            }
+                            else -> {
+                                data = viewState.data ?: emptyList()
+                                LeagueTableScreen(
+                                    navController
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -137,7 +135,6 @@ fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
                         else Color.Transparent
                     )
                 ) {
-
                     LeagueMenuItem(it.name, it.ensignUrl, it.selected)
                 }
                 Divider()
