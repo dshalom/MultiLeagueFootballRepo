@@ -74,6 +74,7 @@ fun LeagueTableScreen(
                         LazyColumn {
                             itemsIndexed(table) { index, tableItem ->
                                 LeagueItem(index, tableItem) {
+                                    leagueTableViewModel.onLeagueItemClicked(it)
                                 }
                             }
                         }
