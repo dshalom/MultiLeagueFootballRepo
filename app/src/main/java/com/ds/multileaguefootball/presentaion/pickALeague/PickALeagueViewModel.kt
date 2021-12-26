@@ -27,14 +27,15 @@ class PickALeagueViewModel @Inject constructor(
         fetchLeagues()
     }
 
-    fun storeLeagueId(leagueId: Int) {
-        _viewState.value.data?.forEach {
-            it.selected = false
-        }
-
+    fun onLeagueItemClicked(leagueId: Int) {
+        resetSelectedItem()
         viewModelScope.launch {
             savedLeagueUseCase.storeLeagueId(leagueId = leagueId)
         }
+    }
+
+    private fun resetSelectedItem() {
+        _viewState.value.data?.find { it.selected }?.selected = false
     }
 
     private fun fetchLeagues() {
@@ -54,7 +55,7 @@ class PickALeagueViewModel @Inject constructor(
                 if (leaguesData is Resource.Success) {
                     savedLeagueUseCase.getStoredLeagueId().collect { storedId ->
                         storedId?.let {
-                            leaguesData.data?.first { it.id == storedId }?.selected = true
+                            leaguesData.data?.find { it.id == storedId }?.selected = true
                         } ?: kotlin.run {
                             savedLeagueUseCase.storeLeagueId(leaguesData.data?.get(0)?.id ?: 0)
                         }
