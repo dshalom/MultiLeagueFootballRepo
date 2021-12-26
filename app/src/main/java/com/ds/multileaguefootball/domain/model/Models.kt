@@ -28,5 +28,6 @@ data class Competition(
     val currentSeasonId: Int?,
     val currentSeasonStartDate: String?,
     val currentSeasonEndDate: String?,
-    val ensignUrl: String
+    val ensignUrl: String,
+    var selected: Boolean = false
 )

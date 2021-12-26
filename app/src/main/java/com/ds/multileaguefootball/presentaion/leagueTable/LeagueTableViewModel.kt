@@ -22,9 +22,12 @@ class LeagueTableViewModel @Inject constructor(
         MutableStateFlow(LeagueTableState(null, false))
     val viewState: StateFlow<LeagueTableState> = _viewState
 
-    fun onStart() {
-        viewModelScope.launch {
+    init {
+        onStart()
+    }
 
+    private fun onStart() {
+        viewModelScope.launch {
             savedLeagueUseCase.getStoredLeagueId()
                 .collect {
                     it?.let { leagueId ->

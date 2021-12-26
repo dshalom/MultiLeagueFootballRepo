@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.Divider
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -32,7 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.ds.multileaguefootball.domain.model.Competition
@@ -52,33 +56,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
-            var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
-            var data by remember {
-                mutableStateOf(
-                    listOf(
-                        Competition(5, "EPL", "UK", "UK", 4, "", "", ""),
-                        Competition(5, "SPL", "UK", "UK", 4, "", "", ""),
-                        Competition(5, "EFL", "UK", "UK", 4, "", "", "")
-                    )
-                )
-            }
-
-            leagueTableViewModel.fetchLeagues()
-            val viewState = leagueTableViewModel.viewState.collectAsState().value
-            when {
-                viewState.loading -> {
-                    LoadingScreen()
-                }
-                viewState.error -> {
-                    ErrorScreen()
-                }
-                else -> {
-                    data = viewState.data ?: emptyList()
-                }
-            }
-
             MultiLeagueFootballTheme {
+                var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
+                var data by remember {
+                    mutableStateOf(emptyList<Competition>())
+                }
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -95,16 +78,28 @@ class MainActivity : ComponentActivity() {
                                 actions = {
                                     LeaguesMenu(data) {
                                         appBarTitle = it.name
-                                        leagueTableViewModel.storeLeagueId(it.id)
+                                        leagueTableViewModel.onLeagueItemClicked(it.id)
                                     }
                                 }
                             )
                         }
 
                     ) {
-                        LeagueTableScreen(
-                            navController
-                        )
+                        val viewState = leagueTableViewModel.viewState.collectAsState().value
+                        when {
+                            viewState.loading -> {
+                                LoadingScreen()
+                            }
+                            viewState.error -> {
+                                ErrorScreen()
+                            }
+                            else -> {
+                                data = viewState.data ?: emptyList()
+                                LeagueTableScreen(
+                                    navController
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -132,24 +127,25 @@ fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
         DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
 
             data.forEach {
-                DropdownMenuItem(onClick = {
-                    onClick(it)
-
-                    expanded.value = false
-                }) {
-
-                    LeagueMenuItem(it.name, it.ensignUrl)
+                DropdownMenuItem(
+                    onClick = {
+                        onClick(it)
+                        expanded.value = false
+                    }
+                ) {
+                    LeagueMenuItem(it.name, it.ensignUrl, it.selected)
                 }
-                Divider()
             }
         }
     }
 }
 
 @Composable
-fun LeagueMenuItem(title: String, url: String) {
+fun LeagueMenuItem(title: String, url: String, selected: Boolean) {
     Row(
         Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+
     ) {
 
         FootballImage(
@@ -160,5 +156,23 @@ fun LeagueMenuItem(title: String, url: String) {
 
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = title)
+        Spacer(modifier = Modifier.width(16.dp))
+
+        if (selected) {
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(Color.Red)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    MultiLeagueFootballTheme() {
+        LeagueMenuItem("EPL", "https://www.iconsdb.com/icons/preview/red/soccer-3-xxl.png", true)
     }
 }

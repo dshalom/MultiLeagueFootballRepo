@@ -23,41 +23,42 @@ class PickALeagueViewModel @Inject constructor(
         MutableStateFlow(PickALeagueState(null, false))
     val viewState: StateFlow<PickALeagueState> = _viewState
 
-    private val _navigateTo: MutableStateFlow<Int> =
-        MutableStateFlow(-1)
-
-    val navigateTo: StateFlow<Int> = _navigateTo
-
     init {
-        getStoredLeague()
+        fetchLeagues()
     }
 
-    fun getStoredLeague() {
-        viewModelScope.launch {
-            savedLeagueUseCase.getStoredLeagueId().collect {
-                _navigateTo.value = it ?: 0
-            }
-        }
-    }
-
-    fun storeLeagueId(leagueId: Int) {
+    fun onLeagueItemClicked(leagueId: Int) {
+        resetSelectedItem()
         viewModelScope.launch {
             savedLeagueUseCase.storeLeagueId(leagueId = leagueId)
         }
     }
 
-    fun fetchLeagues() {
+    private fun resetSelectedItem() {
+        _viewState.value.data?.find { it.selected }?.selected = false
+    }
+
+    private fun fetchLeagues() {
         viewModelScope.launch {
             val result = fetchLeaguesUseCase(Unit)
-            result.collect {
-                _viewState.value = when (it) {
+            result.collect { leaguesData ->
+                _viewState.value = when (leaguesData) {
                     is Resource.Error -> PickALeagueState(error = true)
                     is Resource.Loading -> PickALeagueState(loading = true)
                     is Resource.Success -> {
                         PickALeagueState(
-                            data = it.data,
+                            data = leaguesData.data,
                             error = false
                         )
+                    }
+                }
+                if (leaguesData is Resource.Success) {
+                    savedLeagueUseCase.getStoredLeagueId().collect { storedId ->
+                        storedId?.let {
+                            leaguesData.data?.find { it.id == storedId }?.selected = true
+                        } ?: kotlin.run {
+                            savedLeagueUseCase.storeLeagueId(leaguesData.data?.get(0)?.id ?: 0)
+                        }
                     }
                 }
             }
