@@ -43,40 +43,48 @@ fun LeagueTableScreen(
             ErrorScreen()
         }
         else -> {
-            viewState.data?.table?.let { table ->
+            LeagueTable(viewState, leagueTableViewModel)
+        }
+    }
+}
 
-                Column(
+@Composable
+private fun LeagueTable(
+    viewState: LeagueTableState,
+    leagueTableViewModel: LeagueTableViewModel
+) {
+    viewState.data?.table?.let { table ->
+
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+        ) {
+
+            Column(Modifier.fillMaxSize()) {
+
+                Row(
                     Modifier
-                        .fillMaxSize()
-                        .padding(4.dp)
+                        .height(20.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+
                 ) {
+                    Spacer(modifier = Modifier.width(40.dp))
+                    Spacer(modifier = Modifier.fillMaxWidth(0.375f))
+                    Text(text = "", style = MaterialTheme.typography.h3)
+                    Text(text = "P", style = MaterialTheme.typography.h3)
+                    Text(text = "W", style = MaterialTheme.typography.h3)
+                    Text(text = "D", style = MaterialTheme.typography.h3)
+                    Text(text = "L", style = MaterialTheme.typography.h3)
+                    Text(text = "G", style = MaterialTheme.typography.h3)
+                    Text(text = "P", style = MaterialTheme.typography.h3)
+                }
 
-                    Column(Modifier.fillMaxSize()) {
-
-                        Row(
-                            Modifier
-                                .height(20.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-
-                        ) {
-                            Spacer(modifier = Modifier.width(40.dp))
-                            Spacer(modifier = Modifier.fillMaxWidth(0.375f))
-                            Text(text = "", style = MaterialTheme.typography.h3)
-                            Text(text = "P", style = MaterialTheme.typography.h3)
-                            Text(text = "W", style = MaterialTheme.typography.h3)
-                            Text(text = "D", style = MaterialTheme.typography.h3)
-                            Text(text = "L", style = MaterialTheme.typography.h3)
-                            Text(text = "G", style = MaterialTheme.typography.h3)
-                            Text(text = "P", style = MaterialTheme.typography.h3)
-                        }
-
-                        LazyColumn {
-                            itemsIndexed(table) { index, tableItem ->
-                                LeagueItem(index, tableItem) {
-                                    leagueTableViewModel.onLeagueItemClicked(it)
-                                }
-                            }
+                LazyColumn {
+                    itemsIndexed(table) { index, tableItem ->
+                        LeagueItem(index, tableItem) {
+                            leagueTableViewModel.onLeagueItemClicked(it)
                         }
                     }
                 }
