@@ -14,9 +14,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +32,7 @@ import androidx.navigation.NavHostController
 import com.ds.multileaguefootball.domain.model.TableEntry
 import com.ds.multileaguefootball.presentaion.common.ErrorScreen
 import com.ds.multileaguefootball.presentaion.common.FootballImage
+import com.ds.multileaguefootball.presentaion.common.LeaguesMenu
 import com.ds.multileaguefootball.presentaion.common.LoadingScreen
 
 @Composable
@@ -46,6 +53,30 @@ fun LeagueTableScreen(
             LeagueTable(viewState, leagueTableViewModel)
         }
     }
+
+    var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = appBarTitle)
+                },
+                actions = {
+                    LeaguesMenu(viewState.leagues ?: emptyList()) {
+                        appBarTitle = it.name
+                        leagueTableViewModel.onMenuItemClicked(it.id)
+                    }
+                }
+            )
+        }
+
+    ) {
+        LeagueTable(
+            viewState = viewState,
+            leagueTableViewModel = leagueTableViewModel
+        )
+    }
 }
 
 @Composable
@@ -53,39 +84,32 @@ private fun LeagueTable(
     viewState: LeagueTableState,
     leagueTableViewModel: LeagueTableViewModel
 ) {
-    viewState.data?.table?.let { table ->
+    viewState.standings?.table?.let { table ->
 
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(4.dp)
-        ) {
+        Column(Modifier.fillMaxSize()) {
 
-            Column(Modifier.fillMaxSize()) {
+            Row(
+                Modifier
+                    .height(20.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
 
-                Row(
-                    Modifier
-                        .height(20.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Spacer(modifier = Modifier.width(40.dp))
+                Spacer(modifier = Modifier.fillMaxWidth(0.375f))
+                Text(text = "", style = MaterialTheme.typography.h3)
+                Text(text = "P", style = MaterialTheme.typography.h3)
+                Text(text = "W", style = MaterialTheme.typography.h3)
+                Text(text = "D", style = MaterialTheme.typography.h3)
+                Text(text = "L", style = MaterialTheme.typography.h3)
+                Text(text = "G", style = MaterialTheme.typography.h3)
+                Text(text = "P", style = MaterialTheme.typography.h3)
+            }
 
-                ) {
-                    Spacer(modifier = Modifier.width(40.dp))
-                    Spacer(modifier = Modifier.fillMaxWidth(0.375f))
-                    Text(text = "", style = MaterialTheme.typography.h3)
-                    Text(text = "P", style = MaterialTheme.typography.h3)
-                    Text(text = "W", style = MaterialTheme.typography.h3)
-                    Text(text = "D", style = MaterialTheme.typography.h3)
-                    Text(text = "L", style = MaterialTheme.typography.h3)
-                    Text(text = "G", style = MaterialTheme.typography.h3)
-                    Text(text = "P", style = MaterialTheme.typography.h3)
-                }
-
-                LazyColumn {
-                    itemsIndexed(table) { index, tableItem ->
-                        LeagueItem(index, tableItem) {
-                            leagueTableViewModel.onLeagueItemClicked(it)
-                        }
+            LazyColumn {
+                itemsIndexed(table) { index, tableItem ->
+                    LeagueItem(index, tableItem) {
+                        leagueTableViewModel.onLeagueItemClicked(it)
                     }
                 }
             }

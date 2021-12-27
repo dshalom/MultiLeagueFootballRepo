@@ -6,17 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.ds.multileaguefootball.domain.model.Competition
 import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
 import com.ds.multileaguefootball.presentaion.team.TeamScreen
 import com.ds.multileaguefootball.presentaion.util.LeagueId
@@ -33,12 +28,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MultiLeagueFootballTheme {
-                var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
-                var data by remember {
-                    mutableStateOf(emptyList<Competition>())
-                }
-
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
