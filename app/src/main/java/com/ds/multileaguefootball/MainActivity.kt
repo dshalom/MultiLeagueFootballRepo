@@ -29,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val leagueTableViewModel by viewModels<PickALeagueViewModel>()
+    private val pickALeagueViewModel by viewModels<PickALeagueViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,14 +56,14 @@ class MainActivity : ComponentActivity() {
                                 actions = {
                                     LeaguesMenu(data) {
                                         appBarTitle = it.name
-                                        leagueTableViewModel.onLeagueItemClicked(it.id)
+                                        pickALeagueViewModel.onLeagueItemClicked(it.id)
                                     }
                                 }
                             )
                         }
 
                     ) {
-                        val viewState = leagueTableViewModel.viewState.collectAsState().value
+                        val viewState = pickALeagueViewModel.viewState.collectAsState().value
                         when {
                             viewState.loading -> {
                                 LoadingScreen()
