@@ -3,59 +3,137 @@ package com.ds.multileaguefootball.presentaion.leagueTable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ds.multileaguefootball.domain.common.Resource
+import com.ds.multileaguefootball.domain.usecases.FetchLeaguesUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchStandingsUseCase
-import com.ds.multileaguefootball.domain.usecases.SavedLeagueUseCase
+import com.ds.multileaguefootball.domain.usecases.FetchTeamUseCase
+import com.ds.multileaguefootball.domain.usecases.StoredLeagueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class LeagueTableViewModel @Inject constructor(
     private val fetchStandingsUseCase: FetchStandingsUseCase,
-    private val savedLeagueUseCase: SavedLeagueUseCase
+    private val storedLeagueUseCase: StoredLeagueUseCase,
+    private val fetchTeamUseCase: FetchTeamUseCase,
+    private val fetchLeaguesUseCase: FetchLeaguesUseCase
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<LeagueTableState> =
-        MutableStateFlow(LeagueTableState(null, false))
+        MutableStateFlow(
+            LeagueTableState(
+                standings = null,
+                leagues = null,
+                error = false,
+                loading = false
+            )
+        )
     val viewState: StateFlow<LeagueTableState> = _viewState
 
     init {
-        onStart()
+        fetchLeagues()
+        fetchLeague()
+        fetchScreenTitle()
     }
 
-    private fun onStart() {
+    private fun fetchScreenTitle() {
         viewModelScope.launch {
-            savedLeagueUseCase.getStoredLeagueId()
-                .collect {
-                    it?.let { leagueId ->
+            storedLeagueUseCase.getLeagueName().collect {
+                _viewState.value = _viewState.value.copy(
+                    screenTitle = it ?: "Multileague Football"
+                )
+            }
+        }
+    }
+
+    fun onLeagueItemClicked(teamId: Int) {
+        viewModelScope.launch {
+            fetchTeamUseCase(teamId).collect {
+                it.data?.squadMembers?.forEach { teamMember ->
+                    Timber.i("dsds  ${teamMember.name}") // todo remove
+                }
+            }
+        }
+    }
+
+    fun onMenuItemClicked(leagueId: Int, leagueName: String) {
+        resetSelectedItem()
+        viewModelScope.launch {
+            storedLeagueUseCase.storeLeagueId(leagueId = leagueId)
+            storedLeagueUseCase.storeLeagueName(leagueName = leagueName)
+        }
+    }
+
+    private fun resetSelectedItem() {
+        _viewState.value.leagues?.find { it.selected }?.selected = false
+    }
+
+    private fun fetchLeagues() {
+        viewModelScope.launch {
+            fetchLeaguesUseCase(Unit).collect { leaguesData ->
+
+                _viewState.value = when (leaguesData) {
+                    is Resource.Error -> viewState.value.copy(error = true)
+                    is Resource.Loading -> viewState.value.copy(loading = true)
+                    is Resource.Success -> {
+                        viewState.value.copy(
+                            leagues = leaguesData.data,
+                            error = false,
+                            loading = false
+                        )
+                    }
+                }
+
+                if (leaguesData is Resource.Success) {
+                    storedLeagueUseCase.getStoredLeagueId().collect { storedId ->
+                        storedId?.let {
+                            leaguesData.data?.find { it.id == storedId }?.selected = true
+                        } ?: kotlin.run {
+                            storedLeagueUseCase.storeLeagueId(leaguesData.data?.get(0)?.id ?: 0)
+                            storedLeagueUseCase.storeLeagueName(
+                                leaguesData.data?.get(0)?.name ?: ""
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchLeague() {
+        viewModelScope.launch {
+            storedLeagueUseCase.getStoredLeagueId()
+                .collect { leagueId ->
+                    leagueId?.let {
                         val result = fetchStandingsUseCase(leagueId = leagueId)
                         result.collect { resource ->
                             _viewState.value = when (resource) {
-                                is Resource.Error -> LeagueTableState(
+                                is Resource.Error -> viewState.value.copy(
                                     error = true,
                                     loading = false,
-                                    data = null
+                                    standings = null
                                 )
-                                is Resource.Loading -> LeagueTableState(
+                                is Resource.Loading -> viewState.value.copy(
                                     loading = true,
                                     error = false,
-                                    data = null
+                                    standings = null
                                 )
-                                is Resource.Success -> LeagueTableState(
-                                    data = resource.data,
+                                is Resource.Success -> _viewState.value.copy(
+                                    standings = resource.data,
                                     error = false,
                                     loading = false
                                 )
                             }
                         }
                     } ?: kotlin.run {
-                        _viewState.value = LeagueTableState(
+                        _viewState.value = viewState.value.copy(
                             error = true,
                             loading = false,
-                            data = null
+                            standings = null
                         )
                     }
                 }

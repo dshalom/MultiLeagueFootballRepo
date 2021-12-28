@@ -4,6 +4,7 @@ import com.ds.multileaguefootball.data.InMemoryCache
 import com.ds.multileaguefootball.data.httpclient.ApiService
 import com.ds.multileaguefootball.domain.model.Competition
 import com.ds.multileaguefootball.domain.model.Standings
+import com.ds.multileaguefootball.domain.model.Team
 import com.ds.multileaguefootball.domain.repo.Repo
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class RepoImpl @Inject constructor(
         } ?: run {
             Timber.i("fetching leagues from remote")
 
-            apiService.getLeagues().toDomain().also {
+            apiService.fetchLeagues().toDomain().also {
                 inMemoryCache.competitions = it
             }
         }
@@ -29,9 +30,17 @@ class RepoImpl @Inject constructor(
             Timber.i("fetching standings from cache")
         } ?: run {
             Timber.i("fetching standings from remote")
-            apiService.getStandings(leagueId).toDomain().also {
-                inMemoryCache.standings.put(leagueId, it)
+            apiService.fetchStandings(leagueId).toDomain().also {
+                inMemoryCache.standings[leagueId] = it
             }
+        }
+    }
+
+    override suspend fun fetchTeam(teamId: Int): Team {
+        Timber.i("fetching team from remote")
+        return apiService.fetchTeam(teamId).toDomain().also {
+
+            val u = 0
         }
     }
 }

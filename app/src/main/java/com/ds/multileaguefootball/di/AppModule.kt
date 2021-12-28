@@ -9,8 +9,8 @@ import com.ds.multileaguefootball.data.repo.RepoImpl
 import com.ds.multileaguefootball.domain.repo.Repo
 import com.ds.multileaguefootball.domain.usecases.DataStoreManager
 import com.ds.multileaguefootball.domain.usecases.DataStoreManagerImpl
-import com.ds.multileaguefootball.domain.usecases.SavedLeagueUseCase
-import com.ds.multileaguefootball.domain.usecases.SavedLeagueUseCaseImpl
+import com.ds.multileaguefootball.domain.usecases.StoredLeagueUseCase
+import com.ds.multileaguefootball.domain.usecases.StoredLeagueUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -105,7 +105,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLeagueNavUseCase(dataStoreManager: DataStoreManager): SavedLeagueUseCase {
-        return SavedLeagueUseCaseImpl(dataStoreManager)
+    fun provideLeagueNavUseCase(dataStoreManager: DataStoreManager): StoredLeagueUseCase {
+        return StoredLeagueUseCaseImpl(dataStoreManager)
     }
 }

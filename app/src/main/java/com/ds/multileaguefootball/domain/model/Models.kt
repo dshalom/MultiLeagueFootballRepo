@@ -6,7 +6,7 @@ data class Standings(
 )
 
 data class TableEntry(
-    val crestUrl: String,
+    val crestUrl: String?,
     val id: Int,
     val name: String,
     val draw: String,
@@ -30,4 +30,28 @@ data class Competition(
     val currentSeasonEndDate: String?,
     val ensignUrl: String,
     var selected: Boolean = false
+)
+
+data class Team(
+    val id: Int,
+    val name: String,
+    val shortName: String? = null,
+    val squadMembers: List<SquadMember>? = null,
+    val venue: String? = null,
+    val website: String? = null,
+    val activeCompetitions: List<String?>? = null
+)
+
+data class SquadMember(
+    val dateOfBirth: String? = null,
+    val id: Int,
+    val name: String? = null,
+    val position: String? = null,
+    val role: String? = null,
+    val shirtNumber: String? = null
+)
+
+data class StoredLeague(
+    val id: Int,
+    val name: String
 )
