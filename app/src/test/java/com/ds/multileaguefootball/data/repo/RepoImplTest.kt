@@ -50,7 +50,7 @@ class RepoImplTest {
         cut = RepoImpl(apiService, inMemoryCache)
 
         assertEquals(competitions, cut.fetchLeagues())
-        coVerify(exactly = 0) { apiService.getLeagues() }
+        coVerify(exactly = 0) { apiService.fetchLeagues() }
     }
 
     @Test
@@ -60,7 +60,7 @@ class RepoImplTest {
             val inMemoryCache = InMemoryCache()
 
             coEvery {
-                apiService.getLeagues()
+                apiService.fetchLeagues()
             } returns competitionsDto
 
             every {
@@ -71,7 +71,7 @@ class RepoImplTest {
 
             assertEquals(competitions, cut.fetchLeagues())
 
-            coVerify(exactly = 1) { apiService.getLeagues() }
+            coVerify(exactly = 1) { apiService.fetchLeagues() }
             assertEquals(competitions, inMemoryCache.competitions)
         }
 
@@ -83,7 +83,7 @@ class RepoImplTest {
 
         cut = RepoImpl(apiService, inMemoryCache)
 
-        coVerify(exactly = 0) { apiService.getStandings(leagueId) }
+        coVerify(exactly = 0) { apiService.fetchStandings(leagueId) }
 
         assertEquals(standings, cut.fetchStandings(leagueId))
     }
@@ -94,7 +94,7 @@ class RepoImplTest {
             val leagueId = 101
             val inMemoryCache = InMemoryCache()
             coEvery {
-                apiService.getStandings(leagueId)
+                apiService.fetchStandings(leagueId)
             } returns standingsDto
 
             every {
@@ -106,6 +106,6 @@ class RepoImplTest {
             assertEquals(standings, cut.fetchStandings(leagueId))
             assertEquals(standings, inMemoryCache.standings[leagueId])
 
-            coVerify(exactly = 1) { apiService.getStandings(leagueId) }
+            coVerify(exactly = 1) { apiService.fetchStandings(leagueId) }
         }
 }
