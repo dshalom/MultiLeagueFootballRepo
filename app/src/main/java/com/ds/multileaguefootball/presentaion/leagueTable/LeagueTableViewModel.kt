@@ -37,6 +37,17 @@ class LeagueTableViewModel @Inject constructor(
     init {
         fetchLeagues()
         fetchLeague()
+        fetchScreenTitle()
+    }
+
+    private fun fetchScreenTitle() {
+        viewModelScope.launch {
+            storedLeagueUseCase.getLeagueName().collect {
+                _viewState.value = _viewState.value.copy(
+                    screenTitle = it ?: "Multileague Football"
+                )
+            }
+        }
     }
 
     fun onLeagueItemClicked(teamId: Int) {
@@ -49,10 +60,11 @@ class LeagueTableViewModel @Inject constructor(
         }
     }
 
-    fun onMenuItemClicked(leagueId: Int) {
+    fun onMenuItemClicked(leagueId: Int, leagueName: String) {
         resetSelectedItem()
         viewModelScope.launch {
             storedLeagueUseCase.storeLeagueId(leagueId = leagueId)
+            storedLeagueUseCase.storeLeagueName(leagueName = leagueName)
         }
     }
 
@@ -82,6 +94,9 @@ class LeagueTableViewModel @Inject constructor(
                             leaguesData.data?.find { it.id == storedId }?.selected = true
                         } ?: kotlin.run {
                             storedLeagueUseCase.storeLeagueId(leaguesData.data?.get(0)?.id ?: 0)
+                            storedLeagueUseCase.storeLeagueName(
+                                leaguesData.data?.get(0)?.name ?: ""
+                            )
                         }
                     }
                 }

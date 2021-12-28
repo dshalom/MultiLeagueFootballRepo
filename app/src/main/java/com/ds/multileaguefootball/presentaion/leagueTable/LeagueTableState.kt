@@ -8,5 +8,5 @@ data class LeagueTableState(
     val leagues: List<Competition>? = null,
     val error: Boolean = false,
     val loading: Boolean = false,
-    val screenTitle: String = "mlf"
+    val screenTitle: String = "MultiLeague Football"
 )

@@ -8,6 +8,8 @@ import javax.inject.Inject
 interface StoredLeagueUseCase {
     suspend fun getStoredLeagueId(): Flow<Int?>
     suspend fun storeLeagueId(leagueId: Int)
+    suspend fun getLeagueName(): Flow<String?>
+    suspend fun storeLeagueName(leagueName: String)
 }
 
 class StoredLeagueUseCaseImpl @Inject constructor(
@@ -15,12 +17,22 @@ class StoredLeagueUseCaseImpl @Inject constructor(
 ) : StoredLeagueUseCase {
 
     override suspend fun getStoredLeagueId(): Flow<Int?> = flow {
-        dataStoreManager.getFromDataStore().collect {
+        dataStoreManager.getIdFromDataStore().collect {
             emit(it)
         }
     }
 
     override suspend fun storeLeagueId(leagueId: Int) {
-        dataStoreManager.savetoDataStore(leagueId)
+        dataStoreManager.saveIdToDataStore(leagueId)
+    }
+
+    override suspend fun getLeagueName(): Flow<String?> = flow {
+        dataStoreManager.getNameFromDataStore().collect {
+            emit(it)
+        }
+    }
+
+    override suspend fun storeLeagueName(leagueName: String) {
+        dataStoreManager.saveNameToDataStore(leagueName)
     }
 }

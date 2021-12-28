@@ -20,8 +20,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,18 +39,16 @@ fun LeagueTableScreen(
     leagueTableViewModel: LeagueTableViewModel = hiltViewModel()
 ) {
     val viewState = leagueTableViewModel.viewState.collectAsState().value
-    var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = appBarTitle)
+                    Text(text = viewState.screenTitle)
                 },
                 actions = {
                     LeaguesMenu(viewState.leagues ?: emptyList()) {
-                        appBarTitle = it.name
-                        leagueTableViewModel.onMenuItemClicked(it.id)
+                        leagueTableViewModel.onMenuItemClicked(it.id, it.name)
                     }
                 }
             )

@@ -50,3 +50,8 @@ data class SquadMember(
     val role: String? = null,
     val shirtNumber: String? = null
 )
+
+data class StoredLeague(
+    val id: Int,
+    val name: String
+)
