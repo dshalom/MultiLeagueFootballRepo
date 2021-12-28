@@ -6,7 +6,7 @@ data class Standings(
 )
 
 data class TableEntry(
-    val crestUrl: String,
+    val crestUrl: String?,
     val id: Int,
     val name: String,
     val draw: String,

@@ -6,7 +6,7 @@ import com.ds.multileaguefootball.domain.common.Resource
 import com.ds.multileaguefootball.domain.usecases.FetchLeaguesUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchStandingsUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchTeamUseCase
-import com.ds.multileaguefootball.domain.usecases.SavedLeagueUseCase
+import com.ds.multileaguefootball.domain.usecases.StoredLeagueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LeagueTableViewModel @Inject constructor(
     private val fetchStandingsUseCase: FetchStandingsUseCase,
-    private val savedLeagueUseCase: SavedLeagueUseCase,
+    private val storedLeagueUseCase: StoredLeagueUseCase,
     private val fetchTeamUseCase: FetchTeamUseCase,
     private val fetchLeaguesUseCase: FetchLeaguesUseCase
 ) : ViewModel() {
@@ -36,14 +36,14 @@ class LeagueTableViewModel @Inject constructor(
 
     init {
         fetchLeagues()
+        fetchLeague()
     }
 
     fun onLeagueItemClicked(teamId: Int) {
         viewModelScope.launch {
             fetchTeamUseCase(teamId).collect {
-
                 it.data?.squadMembers?.forEach { teamMember ->
-                    Timber.i("dsds  ${teamMember.name}")
+                    Timber.i("dsds  ${teamMember.name}") // todo remove
                 }
             }
         }
@@ -52,7 +52,7 @@ class LeagueTableViewModel @Inject constructor(
     fun onMenuItemClicked(leagueId: Int) {
         resetSelectedItem()
         viewModelScope.launch {
-            savedLeagueUseCase.storeLeagueId(leagueId = leagueId)
+            storedLeagueUseCase.storeLeagueId(leagueId = leagueId)
         }
     }
 
@@ -62,30 +62,27 @@ class LeagueTableViewModel @Inject constructor(
 
     private fun fetchLeagues() {
         viewModelScope.launch {
-            val result = fetchLeaguesUseCase(Unit)
-            result.collect { leaguesData ->
+            fetchLeaguesUseCase(Unit).collect { leaguesData ->
 
                 _viewState.value = when (leaguesData) {
                     is Resource.Error -> viewState.value.copy(error = true)
                     is Resource.Loading -> viewState.value.copy(loading = true)
                     is Resource.Success -> {
-
                         viewState.value.copy(
                             leagues = leaguesData.data,
-                            error = false
+                            error = false,
+                            loading = false
                         )
                     }
                 }
 
                 if (leaguesData is Resource.Success) {
-
-                    savedLeagueUseCase.getStoredLeagueId().collect { storedId ->
+                    storedLeagueUseCase.getStoredLeagueId().collect { storedId ->
                         storedId?.let {
                             leaguesData.data?.find { it.id == storedId }?.selected = true
                         } ?: kotlin.run {
-                            savedLeagueUseCase.storeLeagueId(leaguesData.data?.get(0)?.id ?: 0)
+                            storedLeagueUseCase.storeLeagueId(leaguesData.data?.get(0)?.id ?: 0)
                         }
-                        fetchLeague()
                     }
                 }
             }
@@ -94,7 +91,7 @@ class LeagueTableViewModel @Inject constructor(
 
     private fun fetchLeague() {
         viewModelScope.launch {
-            savedLeagueUseCase.getStoredLeagueId()
+            storedLeagueUseCase.getStoredLeagueId()
                 .collect { leagueId ->
                     leagueId?.let {
                         val result = fetchStandingsUseCase(leagueId = leagueId)

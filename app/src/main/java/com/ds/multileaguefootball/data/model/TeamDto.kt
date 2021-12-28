@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TeamDto(
     val activeCompetitionDtos: List<ActiveCompetitionDto>? = null,
-    val crestUrl: String,
+    val crestUrl: String?,
     val id: Int,
     val name: String,
     val shortName: String? = null,

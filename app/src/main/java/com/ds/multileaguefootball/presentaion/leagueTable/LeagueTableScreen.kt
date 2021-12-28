@@ -41,19 +41,6 @@ fun LeagueTableScreen(
     leagueTableViewModel: LeagueTableViewModel = hiltViewModel()
 ) {
     val viewState = leagueTableViewModel.viewState.collectAsState().value
-
-    when {
-        viewState.loading -> {
-            LoadingScreen()
-        }
-        viewState.error -> {
-            ErrorScreen()
-        }
-        else -> {
-            LeagueTable(viewState, leagueTableViewModel)
-        }
-    }
-
     var appBarTitle by remember { mutableStateOf("MultiLeague Football") }
 
     Scaffold(
@@ -72,45 +59,54 @@ fun LeagueTableScreen(
         }
 
     ) {
-        LeagueTable(
-            viewState = viewState,
-            leagueTableViewModel = leagueTableViewModel
-        )
+        when {
+            viewState.loading -> {
+                LoadingScreen()
+            }
+            viewState.error -> {
+                ErrorScreen()
+            }
+            else -> {
+                viewState.standings?.table?.let {
+                    LeagueTable(it) { leagueItem ->
+                        leagueTableViewModel.onLeagueItemClicked(leagueItem)
+                    }
+                } ?: run {
+                    ErrorScreen()
+                }
+            }
+        }
     }
 }
 
 @Composable
 private fun LeagueTable(
-    viewState: LeagueTableState,
-    leagueTableViewModel: LeagueTableViewModel
+    table: List<TableEntry>,
+    leagueItemClicked: (id: Int) -> Unit
 ) {
-    viewState.standings?.table?.let { table ->
+    Column(Modifier.fillMaxSize()) {
+        Row(
+            Modifier
+                .height(20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
 
-        Column(Modifier.fillMaxSize()) {
+        ) {
+            Spacer(modifier = Modifier.width(40.dp))
+            Spacer(modifier = Modifier.fillMaxWidth(0.375f))
+            Text(text = "", style = MaterialTheme.typography.h3)
+            Text(text = "P", style = MaterialTheme.typography.h3)
+            Text(text = "W", style = MaterialTheme.typography.h3)
+            Text(text = "D", style = MaterialTheme.typography.h3)
+            Text(text = "L", style = MaterialTheme.typography.h3)
+            Text(text = "G", style = MaterialTheme.typography.h3)
+            Text(text = "P", style = MaterialTheme.typography.h3)
+        }
 
-            Row(
-                Modifier
-                    .height(20.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-
-            ) {
-                Spacer(modifier = Modifier.width(40.dp))
-                Spacer(modifier = Modifier.fillMaxWidth(0.375f))
-                Text(text = "", style = MaterialTheme.typography.h3)
-                Text(text = "P", style = MaterialTheme.typography.h3)
-                Text(text = "W", style = MaterialTheme.typography.h3)
-                Text(text = "D", style = MaterialTheme.typography.h3)
-                Text(text = "L", style = MaterialTheme.typography.h3)
-                Text(text = "G", style = MaterialTheme.typography.h3)
-                Text(text = "P", style = MaterialTheme.typography.h3)
-            }
-
-            LazyColumn {
-                itemsIndexed(table) { index, tableItem ->
-                    LeagueItem(index, tableItem) {
-                        leagueTableViewModel.onLeagueItemClicked(it)
-                    }
+        LazyColumn {
+            itemsIndexed(table) { index, tableItem ->
+                LeagueItem(index, tableItem) {
+                    leagueItemClicked(it)
                 }
             }
         }
@@ -139,14 +135,14 @@ private fun LeagueItem(
             text = (index + 1).toString(),
             style = MaterialTheme.typography.h3
         )
-
-        FootballImage(
-            modifier = Modifier
-                .size(40.dp),
-            context = LocalContext.current,
-            url = tableItem.crestUrl
-        )
-
+        tableItem.crestUrl?.let {
+            FootballImage(
+                modifier = Modifier
+                    .size(40.dp),
+                context = LocalContext.current,
+                url = it
+            )
+        }
         Text(
             text = tableItem.name,
             Modifier.fillMaxWidth(0.375f),

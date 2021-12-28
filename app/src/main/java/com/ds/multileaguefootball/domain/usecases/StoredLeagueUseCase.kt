@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-interface SavedLeagueUseCase {
+interface StoredLeagueUseCase {
     suspend fun getStoredLeagueId(): Flow<Int?>
     suspend fun storeLeagueId(leagueId: Int)
 }
 
-class SavedLeagueUseCaseImpl @Inject constructor(
+class StoredLeagueUseCaseImpl @Inject constructor(
     private val dataStoreManager: DataStoreManager
-) : SavedLeagueUseCase {
+) : StoredLeagueUseCase {
 
     override suspend fun getStoredLeagueId(): Flow<Int?> = flow {
         dataStoreManager.getFromDataStore().collect {
