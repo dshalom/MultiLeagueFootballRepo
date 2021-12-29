@@ -32,6 +32,7 @@ import com.ds.multileaguefootball.presentaion.common.ErrorScreen
 import com.ds.multileaguefootball.presentaion.common.FootballImage
 import com.ds.multileaguefootball.presentaion.common.LeaguesMenu
 import com.ds.multileaguefootball.presentaion.common.LoadingScreen
+import com.ds.multileaguefootball.presentaion.util.TeamRoute
 
 @Composable
 fun LeagueTableScreen(
@@ -43,6 +44,7 @@ fun LeagueTableScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                elevation = 4.dp,
                 title = {
                     Text(text = viewState.screenTitle)
                 },
@@ -64,8 +66,8 @@ fun LeagueTableScreen(
             }
             else -> {
                 viewState.standings?.table?.let {
-                    LeagueTable(it) { leagueItem ->
-                        leagueTableViewModel.onLeagueItemClicked(leagueItem)
+                    LeagueTable(it) { leagueId ->
+                        navController.navigate("$TeamRoute/$leagueId")
                     }
                 } ?: run {
                     ErrorScreen()

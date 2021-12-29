@@ -14,8 +14,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ds.multileaguefootball.presentaion.leagueTable.LeagueTableScreen
 import com.ds.multileaguefootball.presentaion.team.TeamScreen
-import com.ds.multileaguefootball.presentaion.util.LeagueId
 import com.ds.multileaguefootball.presentaion.util.LeagueTableRoute
+import com.ds.multileaguefootball.presentaion.util.TeamId
 import com.ds.multileaguefootball.presentaion.util.TeamRoute
 import com.ds.multileaguefootball.ui.theme.MultiLeagueFootballTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,16 +45,16 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            "$TeamRoute/{$LeagueId}",
+                            "$TeamRoute/{$TeamId}",
                             arguments = listOf(
-                                navArgument(LeagueId) {
+                                navArgument(TeamId) {
                                     type = NavType.IntType
                                 }
                             )
                         ) { backStackEntry ->
                             TeamScreen(
                                 navController,
-                                backStackEntry.arguments?.getInt(LeagueId)
+                                backStackEntry.arguments?.getInt(TeamId)
                             )
                         }
                     }

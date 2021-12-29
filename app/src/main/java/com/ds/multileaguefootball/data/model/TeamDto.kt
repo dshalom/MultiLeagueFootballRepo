@@ -17,6 +17,7 @@ data class TeamDto(
     fun toDomain(): Team {
         return Team(
             id = id,
+            crestUrl = crestUrl,
             name = name,
             shortName = shortName,
             squadMembers = squad?.map { it.toDomain() },
