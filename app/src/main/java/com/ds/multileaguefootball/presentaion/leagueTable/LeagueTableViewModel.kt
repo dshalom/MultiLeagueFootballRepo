@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,16 +45,6 @@ class LeagueTableViewModel @Inject constructor(
                 _viewState.value = _viewState.value.copy(
                     screenTitle = it ?: "Multileague Football"
                 )
-            }
-        }
-    }
-
-    fun onLeagueItemClicked(teamId: Int) {
-        viewModelScope.launch {
-            fetchTeamUseCase(teamId).collect {
-                it.data?.squadMembers?.forEach { teamMember ->
-                    Timber.i("dsds  ${teamMember.name}") // todo remove
-                }
             }
         }
     }

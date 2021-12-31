@@ -2,25 +2,11 @@
 
 no order:
 
-persist league
-simplify domain models  DONE
-day-night styling
-error handling
-    -   offline     DONE
-    -   corrupt data DONE
-    -   loading     DONE
-
-testing UI
-    -   offline
-    -   corrupt data
-    -   loading
+finish ui
 
 
-long term
-team screen: Played games, upcoming games, players, any stats
+team screen: upcoming games, players, any stats
 
-persist team in its own tab
+publish
 
-rework navigation, remove bottom nav
-1. add menu
-2. remove bottom nav
+

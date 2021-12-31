@@ -35,6 +35,7 @@ data class Competition(
 data class Team(
     val id: Int,
     val name: String,
+    val crestUrl: String?,
     val shortName: String? = null,
     val squadMembers: List<SquadMember>? = null,
     val venue: String? = null,
@@ -51,7 +52,12 @@ data class SquadMember(
     val shirtNumber: String? = null
 )
 
-data class StoredLeague(
-    val id: Int,
-    val name: String
+data class Matches(
+    val matches: List<Match>
+)
+
+data class Match(
+    val dateTime: String,
+    val homeTeam: String,
+    val awayTeam: String
 )

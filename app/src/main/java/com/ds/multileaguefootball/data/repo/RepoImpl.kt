@@ -3,6 +3,7 @@ package com.ds.multileaguefootball.data.repo
 import com.ds.multileaguefootball.data.InMemoryCache
 import com.ds.multileaguefootball.data.httpclient.ApiService
 import com.ds.multileaguefootball.domain.model.Competition
+import com.ds.multileaguefootball.domain.model.Matches
 import com.ds.multileaguefootball.domain.model.Standings
 import com.ds.multileaguefootball.domain.model.Team
 import com.ds.multileaguefootball.domain.repo.Repo
@@ -37,10 +38,17 @@ class RepoImpl @Inject constructor(
     }
 
     override suspend fun fetchTeam(teamId: Int): Team {
-        Timber.i("fetching team from remote")
-        return apiService.fetchTeam(teamId).toDomain().also {
-
-            val u = 0
+        return inMemoryCache.teams[teamId]?.also {
+            Timber.i("fetching team from cache")
+        } ?: run {
+            Timber.i("fetching team from remote")
+            return apiService.fetchTeam(teamId).toDomain().also {
+                inMemoryCache.teams[teamId] = it
+            }
         }
+    }
+
+    override suspend fun fetchMatches(teamId: Int, dateFrom: String, dateTo: String): Matches {
+        return apiService.fetchMatches(teamId, dateFrom, dateTo).toDomain()
     }
 }
