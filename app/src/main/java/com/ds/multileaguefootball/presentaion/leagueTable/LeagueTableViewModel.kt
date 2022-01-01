@@ -118,12 +118,6 @@ class LeagueTableViewModel @Inject constructor(
                                 )
                             }
                         }
-                    } ?: kotlin.run {
-                        _viewState.value = viewState.value.copy(
-                            error = true,
-                            loading = false,
-                            standings = null
-                        )
                     }
                 }
         }

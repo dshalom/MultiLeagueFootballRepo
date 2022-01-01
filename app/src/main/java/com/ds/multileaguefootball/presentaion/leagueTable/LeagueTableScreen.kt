@@ -69,8 +69,6 @@ fun LeagueTableScreen(
                     LeagueTable(it) { leagueId ->
                         navController.navigate("$TeamRoute/$leagueId")
                     }
-                } ?: run {
-                    ErrorScreen()
                 }
             }
         }
