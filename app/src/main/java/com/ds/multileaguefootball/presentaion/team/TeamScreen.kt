@@ -90,8 +90,6 @@ fun TeamScreen(navController: NavController, teamId: Int?) {
             else -> {
                 if (viewState.teamData != null && viewState.matchesData != null) {
                     TeamInfo(team = viewState.teamData, matches = viewState.matchesData)
-                } else {
-                    ErrorScreen()
                 }
             }
         }
