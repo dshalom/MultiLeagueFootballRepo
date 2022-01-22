@@ -29,5 +29,5 @@ class ApiServiceImpl @Inject constructor(
         client.get("${baseAddress}teams/$teamId")
 
     override suspend fun fetchMatches(teamId: Int, dateFrom: String, dateTo: String): MatchesDto =
-        client.get("${baseAddress}teams/$teamId/matches?status=SCHEDULED&limit=3&dateFrom=$dateFrom&dateTo=$dateTo")
+        client.get("${baseAddress}teams/$teamId/matches?status=SCHEDULED&dateFrom=$dateFrom&dateTo=$dateTo")
 }
