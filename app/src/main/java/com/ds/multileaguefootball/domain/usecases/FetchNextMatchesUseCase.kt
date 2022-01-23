@@ -31,7 +31,11 @@ class FetchNextMatchesUseCase @Inject constructor(
                     matches = it.matches.take(3)
                 )
             }
-            emit(Resource.Success(result))
+            result?.let {
+                emit(Resource.Success(result))
+            } ?: kotlin.run {
+                emit(Error<Matches>("Error fetching matches"))
+            }
         } catch (e: Exception) {
             emit(Error(e.localizedMessage))
         }

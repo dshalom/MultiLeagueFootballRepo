@@ -45,7 +45,6 @@ fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
         }
 
         DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
-
             data.forEach {
                 DropdownMenuItem(
                     onClick = {
@@ -53,7 +52,7 @@ fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
                         expanded.value = false
                     }
                 ) {
-                    LeagueMenuItem(it.name, it.ensignUrl, it.selected)
+                    LeagueMenuItem(it.name, it.ensignUrl ?: "", it.selected)
                 }
             }
         }
