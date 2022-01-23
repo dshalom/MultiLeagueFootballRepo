@@ -3,7 +3,7 @@ package com.ds.multileaguefootball.presentaion.team
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ds.multileaguefootball.domain.common.Resource
-import com.ds.multileaguefootball.domain.usecases.FetchMatchesUseCase
+import com.ds.multileaguefootball.domain.usecases.FetchNextMatchesUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchTeamUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TeamViewModel @Inject constructor(
     private val fetchTeamUseCase: FetchTeamUseCase,
-    private val fetchMatchesUseCase: FetchMatchesUseCase
+    private val fetchNextMatchesUseCase: FetchNextMatchesUseCase
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<TeamState> =
@@ -26,7 +26,7 @@ class TeamViewModel @Inject constructor(
     fun onStart(teamId: Int?) {
         viewModelScope.launch {
             teamId?.let {
-                fetchTeamUseCase(it).combine(fetchMatchesUseCase(it)) { team, matches ->
+                fetchTeamUseCase(it).combine(fetchNextMatchesUseCase(it)) { team, matches ->
                     _viewState.value = when (team) {
                         is Resource.Error -> viewState.value.copy(
                             error = true,

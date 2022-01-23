@@ -14,7 +14,11 @@ class FetchStandingsUseCase @Inject constructor(
             emit(Resource.Loading())
             val result = repo.fetchStandings(leagueId)
 
-            emit(Resource.Success(result))
+            result?.let {
+                emit(Resource.Success(it))
+            } ?: kotlin.run {
+                emit(Resource.Error<Standings>("Error fetching stadings"))
+            }
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage))
         }

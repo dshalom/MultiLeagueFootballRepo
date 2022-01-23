@@ -15,10 +15,15 @@ class FetchLeaguesUseCase @Inject constructor(
         emit(Resource.Loading())
         try {
             val result = repo.fetchLeagues()
-                .filter {
+                ?.filter {
                     it.ensignUrl != null && availableLeagues.contains(it.id)
                 }
-            emit(Resource.Success(result))
+
+            result?.let {
+                emit(Resource.Success(result))
+            } ?: kotlin.run {
+                emit(Resource.Error<List<Competition>>("Error fetching "))
+            }
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage))
         }
