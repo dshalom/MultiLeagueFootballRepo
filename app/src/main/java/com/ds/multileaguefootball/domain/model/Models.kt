@@ -59,5 +59,7 @@ data class Matches(
 data class Match(
     val dateTime: String,
     val homeTeam: String,
-    val awayTeam: String
+    val awayTeam: String,
+    val homeTeamScore: Int?,
+    val awayTeamScore: Int?
 )

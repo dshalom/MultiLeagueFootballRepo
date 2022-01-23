@@ -48,7 +48,12 @@ class RepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchMatches(teamId: Int, dateFrom: String, dateTo: String): Matches? {
-        return apiService.fetchMatches(teamId, dateFrom, dateTo)?.toDomain()
+    override suspend fun fetchMatches(
+        teamId: Int,
+        status: String,
+        dateFrom: String,
+        dateTo: String
+    ): Matches? {
+        return apiService.fetchMatches(teamId, status, dateFrom, dateTo)?.toDomain()
     }
 }

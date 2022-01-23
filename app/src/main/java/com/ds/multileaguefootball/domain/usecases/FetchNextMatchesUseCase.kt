@@ -17,18 +17,19 @@ class FetchNextMatchesUseCase @Inject constructor(
         val current = LocalDateTime.now()
         val oneMonthAhead = current.plusMonths(1)
 
-        val currentFormatted = current.format(DateTimeFormatter.ofPattern(FORMAT))
+        val currentDateTimeFormatted = current.format(DateTimeFormatter.ofPattern(FORMAT))
         val oneMonthAheadFormatted = oneMonthAhead.format(DateTimeFormatter.ofPattern(FORMAT))
 
         try {
             emit(Resource.Loading())
             val result = repo.fetchMatches(
                 teamId = teamId,
-                dateFrom = currentFormatted,
+                status = STATUS,
+                dateFrom = currentDateTimeFormatted,
                 dateTo = oneMonthAheadFormatted
             )?.let {
                 it.copy(
-                    matches = it.matches.take(3)
+                    matches = it.matches.take(2)
                 )
             }
             result?.let {
@@ -43,5 +44,6 @@ class FetchNextMatchesUseCase @Inject constructor(
 
     companion object {
         private const val FORMAT = "yyyy-MM-dd"
+        private const val STATUS = "SCHEDULED"
     }
 }
