@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.ds.multileaguefootball.domain.common.Resource
 import com.ds.multileaguefootball.domain.usecases.FetchLeaguesUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchStandingsUseCase
-import com.ds.multileaguefootball.domain.usecases.FetchTeamUseCase
 import com.ds.multileaguefootball.domain.usecases.StoredLeagueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +17,6 @@ import javax.inject.Inject
 class LeagueTableViewModel @Inject constructor(
     private val fetchStandingsUseCase: FetchStandingsUseCase,
     private val storedLeagueUseCase: StoredLeagueUseCase,
-    private val fetchTeamUseCase: FetchTeamUseCase,
     private val fetchLeaguesUseCase: FetchLeaguesUseCase
 ) : ViewModel() {
 
