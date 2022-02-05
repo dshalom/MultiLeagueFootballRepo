@@ -9,5 +9,10 @@ interface Repo {
     suspend fun fetchLeagues(): List<Competition>?
     suspend fun fetchStandings(leagueId: Int): Standings?
     suspend fun fetchTeam(teamId: Int): Team?
-    suspend fun fetchMatches(teamId: Int, dateFrom: String, dateTo: String): Matches?
+    suspend fun fetchMatches(
+        teamId: Int,
+        status: String,
+        dateFrom: String,
+        dateTo: String
+    ): Matches?
 }

@@ -12,7 +12,12 @@ interface ApiService {
     suspend fun fetchLeagues(): CompetitionsDto?
     suspend fun fetchStandings(leagueId: Int): StandingsDto?
     suspend fun fetchTeam(teamId: Int): TeamDto?
-    suspend fun fetchMatches(teamId: Int, dateFrom: String, dateTo: String): MatchesDto?
+    suspend fun fetchMatches(
+        teamId: Int,
+        status: String,
+        dateFrom: String,
+        dateTo: String
+    ): MatchesDto?
 }
 
 class ApiServiceImpl @Inject constructor(
@@ -28,6 +33,11 @@ class ApiServiceImpl @Inject constructor(
     override suspend fun fetchTeam(teamId: Int): TeamDto? =
         client.get("${baseAddress}teams/$teamId")
 
-    override suspend fun fetchMatches(teamId: Int, dateFrom: String, dateTo: String): MatchesDto? =
-        client.get("${baseAddress}teams/$teamId/matches?status=SCHEDULED&dateFrom=$dateFrom&dateTo=$dateTo")
+    override suspend fun fetchMatches(
+        teamId: Int,
+        status: String,
+        dateFrom: String,
+        dateTo: String
+    ): MatchesDto? =
+        client.get("${baseAddress}teams/$teamId/matches?status=$status&dateFrom=$dateFrom&dateTo=$dateTo")
 }

@@ -9,14 +9,17 @@ import java.time.format.DateTimeFormatter
 data class MatchDto(
     val awayTeam: AwayTeamDto,
     val homeTeam: HomeTeamDto,
-    val utcDate: String
+    val utcDate: String,
+    val score: ScoreDto
 ) {
     fun toDomain(): Match {
         return Match(
             dateTime = LocalDateTime.parse(utcDate, DateTimeFormatter.ISO_DATE_TIME).format(
                 DateTimeFormatter.ofPattern(FORMAT)
             ),
-            homeTeam = homeTeam.name, awayTeam = awayTeam.name
+            homeTeam = homeTeam.name, awayTeam = awayTeam.name,
+            homeTeamScore = score.fullTime?.homeTeam,
+            awayTeamScore = score.fullTime?.awayTeam
         )
     }
 
