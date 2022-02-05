@@ -8,6 +8,7 @@ data class TeamState(
     val teamData: Team? = null,
     val nextMatchesData: Matches? = null,
     val lastMatchData: Match? = null,
+    val liveMatchData: Match? = null,
     val error: Boolean = false,
     val loading: Boolean = false
 )

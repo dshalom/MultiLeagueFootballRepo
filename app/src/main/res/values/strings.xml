@@ -4,6 +4,7 @@
     <string name="pick_a_league">Pick a League</string>
     <string name="upcoming_matches">Upcoming Matches</string>
     <string name="last_match">Last Match</string>
+    <string name="live_match">Live</string>
     <string name="vs">vs</string>
     <string name="squad">Squad</string>
 </resources>

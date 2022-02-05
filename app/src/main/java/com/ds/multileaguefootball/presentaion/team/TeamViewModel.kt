@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ds.multileaguefootball.domain.common.Resource
 import com.ds.multileaguefootball.domain.usecases.FetchLastMatchUseCase
+import com.ds.multileaguefootball.domain.usecases.FetchLiveMatchUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchNextMatchesUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchTeamUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,11 +19,12 @@ import javax.inject.Inject
 class TeamViewModel @Inject constructor(
     private val fetchTeamUseCase: FetchTeamUseCase,
     private val fetchNextMatchesUseCase: FetchNextMatchesUseCase,
-    private val fetchLastMatchUseCase: FetchLastMatchUseCase
+    private val fetchLastMatchUseCase: FetchLastMatchUseCase,
+    private val fetchLiveMatchUseCase: FetchLiveMatchUseCase
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<TeamState> =
-        MutableStateFlow(TeamState(null, null, null, false, false))
+        MutableStateFlow(TeamState(null, null, null, null, false, false))
     val viewState: StateFlow<TeamState> = _viewState
 
     fun onStart(teamId: Int?) {
@@ -44,16 +46,9 @@ class TeamViewModel @Inject constructor(
                             loading = false
                         )
                     }
-                    _viewState.value = when (matches) {
-                        is Resource.Error -> _viewState.value.copy(
-                            error = true,
-                            loading = false,
-                        )
-                        is Resource.Loading -> _viewState.value.copy(
-                            loading = true,
-                            error = false,
-                        )
-                        is Resource.Success -> _viewState.value.copy(
+
+                    if (matches is Resource.Success) {
+                        _viewState.value = _viewState.value.copy(
                             nextMatchesData = matches.data,
                             error = false,
                             loading = false
@@ -62,17 +57,19 @@ class TeamViewModel @Inject constructor(
                 }.collect {}
 
                 fetchLastMatchUseCase(it).collect { match ->
-                    _viewState.value = when (match) {
-                        is Resource.Error -> _viewState.value.copy(
-                            error = true,
-                            loading = false,
-                        )
-                        is Resource.Loading -> _viewState.value.copy(
-                            loading = true,
-                            error = false
-                        )
-                        is Resource.Success -> _viewState.value.copy(
+                    if (match is Resource.Success) {
+                        _viewState.value = _viewState.value.copy(
                             lastMatchData = match.data,
+                            error = false,
+                            loading = false
+                        )
+                    }
+                }
+
+                fetchLiveMatchUseCase(it).collect { match ->
+                    if (match is Resource.Success) {
+                        _viewState.value = _viewState.value.copy(
+                            liveMatchData = match.data,
                             error = false,
                             loading = false
                         )
