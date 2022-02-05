@@ -13,9 +13,12 @@ class FetchTeamUseCase @Inject constructor(
     override suspend fun invoke(teamId: Int): Flow<Resource<Team>> = flow {
         try {
             emit(Resource.Loading())
-            val result = repo.fetchTeam(teamId)
 
-            emit(Resource.Success(result))
+            repo.fetchTeam(teamId)?.let {
+                emit(Resource.Success(it))
+            } ?: kotlin.run {
+                emit(Resource.Error<Team>("Error fetching team"))
+            }
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage))
         }

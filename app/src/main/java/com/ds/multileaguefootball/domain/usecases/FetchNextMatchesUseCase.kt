@@ -1,6 +1,7 @@
 package com.ds.multileaguefootball.domain.usecases
 
 import com.ds.multileaguefootball.domain.common.Resource
+import com.ds.multileaguefootball.domain.common.Resource.Error
 import com.ds.multileaguefootball.domain.model.Matches
 import com.ds.multileaguefootball.domain.repo.Repo
 import kotlinx.coroutines.flow.flow
@@ -8,7 +9,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class FetchMatchesUseCase @Inject constructor(
+class FetchNextMatchesUseCase @Inject constructor(
     private val repo: Repo
 ) : BaseUseCase<Int, Matches> {
     override suspend fun invoke(teamId: Int) = flow {
@@ -16,24 +17,33 @@ class FetchMatchesUseCase @Inject constructor(
         val current = LocalDateTime.now()
         val oneMonthAhead = current.plusMonths(1)
 
-        val currentFormatted = current.format(DateTimeFormatter.ofPattern(FORMAT))
+        val currentDateTimeFormatted = current.format(DateTimeFormatter.ofPattern(FORMAT))
         val oneMonthAheadFormatted = oneMonthAhead.format(DateTimeFormatter.ofPattern(FORMAT))
 
         try {
             emit(Resource.Loading())
             val result = repo.fetchMatches(
                 teamId = teamId,
-                dateFrom = currentFormatted,
+                status = STATUS,
+                dateFrom = currentDateTimeFormatted,
                 dateTo = oneMonthAheadFormatted
-            )
-
-            emit(Resource.Success(result))
+            )?.let {
+                it.copy(
+                    matches = it.matches.take(2)
+                )
+            }
+            result?.let {
+                emit(Resource.Success(result))
+            } ?: kotlin.run {
+                emit(Error<Matches>("Error fetching matches"))
+            }
         } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage))
+            emit(Error(e.localizedMessage))
         }
     }
 
     companion object {
         private const val FORMAT = "yyyy-MM-dd"
+        private const val STATUS = "SCHEDULED"
     }
 }

@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ds.multileaguefootball.R
+import com.ds.multileaguefootball.domain.model.Match
 import com.ds.multileaguefootball.domain.model.Matches
 import com.ds.multileaguefootball.domain.model.SquadMember
 import com.ds.multileaguefootball.domain.model.Team
@@ -88,16 +89,18 @@ fun TeamScreen(navController: NavController, teamId: Int?) {
                 ErrorScreen()
             }
             else -> {
-                if (viewState.teamData != null && viewState.matchesData != null) {
-                    TeamInfo(team = viewState.teamData, matches = viewState.matchesData)
-                }
+                TeamInfo(
+                    team = viewState.teamData,
+                    nextMatches = viewState.nextMatchesData,
+                    lastMatch = viewState.lastMatchData
+                )
             }
         }
     }
 }
 
 @Composable
-fun TeamInfo(team: Team, matches: Matches) {
+fun TeamInfo(team: Team?, nextMatches: Matches?, lastMatch: Match?) {
 
     val scrollState = rememberScrollState()
     val uriHandler = LocalUriHandler.current
@@ -109,7 +112,7 @@ fun TeamInfo(team: Team, matches: Matches) {
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        team.crestUrl?.let {
+        team?.crestUrl?.let {
             FootballImage(
                 modifier = Modifier
                     .size(120.dp),
@@ -120,14 +123,14 @@ fun TeamInfo(team: Team, matches: Matches) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        team.venue?.also {
+        team?.venue?.also {
             Text(
                 text = it, style = MaterialTheme.typography.h3,
                 fontWeight = FontWeight.Bold
             )
         }
 
-        team.website?.let { link ->
+        team?.website?.let { link ->
             val annotatedLinkString = buildAnnotatedString {
                 append(link)
                 addStyle(
@@ -148,28 +151,29 @@ fun TeamInfo(team: Team, matches: Matches) {
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        UpcomingMatches(matches)
-
+        LastMatch(lastMatch)
         Spacer(modifier = Modifier.height(12.dp))
-        SquadMembers(team.squadMembers)
+        UpcomingMatches(nextMatches)
+        Spacer(modifier = Modifier.height(12.dp))
+        SquadMembers(team?.squadMembers)
     }
 }
 
 @Composable
-fun UpcomingMatches(matches: Matches) {
-    Text(
-        text = stringResource(R.string.upcoming_matches),
-        style = MaterialTheme.typography.h2
-    )
+fun LastMatch(lastMatch: Match?) {
+    lastMatch?.let {
+        Text(
+            text = stringResource(R.string.last_match),
+            style = MaterialTheme.typography.h2
+        )
 
-    matches.matches.forEach { match ->
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = CenterHorizontally
         ) {
             Text(
-                text = match.homeTeam ?: "",
+                text = "${lastMatch.homeTeam}  ${lastMatch.homeTeamScore}",
                 style = MaterialTheme.typography.h3
             )
             Text(
@@ -178,13 +182,46 @@ fun UpcomingMatches(matches: Matches) {
             )
 
             Text(
-                text = match.awayTeam ?: "",
+                text = "${lastMatch.awayTeam}  ${lastMatch.awayTeamScore}",
                 style = MaterialTheme.typography.h3
             )
-            Text(
-                text = match.dateTime ?: "",
-                style = MaterialTheme.typography.h3
-            )
+        }
+    }
+}
+
+@Composable
+fun UpcomingMatches(matches: Matches?) {
+
+    matches?.let {
+        Text(
+            text = stringResource(R.string.upcoming_matches),
+            style = MaterialTheme.typography.h2
+        )
+
+        matches.matches.forEach { match ->
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = CenterHorizontally
+            ) {
+                Text(
+                    text = match.homeTeam,
+                    style = MaterialTheme.typography.h3
+                )
+                Text(
+                    text = stringResource(R.string.vs),
+                    style = MaterialTheme.typography.subtitle1
+                )
+
+                Text(
+                    text = match.awayTeam,
+                    style = MaterialTheme.typography.h3
+                )
+                Text(
+                    text = match.dateTime,
+                    style = MaterialTheme.typography.h3
+                )
+            }
         }
     }
 }
