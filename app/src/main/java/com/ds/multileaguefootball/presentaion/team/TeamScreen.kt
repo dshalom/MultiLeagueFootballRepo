@@ -92,7 +92,8 @@ fun TeamScreen(navController: NavController, teamId: Int?) {
                 TeamInfo(
                     team = viewState.teamData,
                     nextMatches = viewState.nextMatchesData,
-                    lastMatch = viewState.lastMatchData
+                    lastMatch = viewState.lastMatchData,
+                    liveMatch = viewState.liveMatchData
                 )
             }
         }
@@ -100,7 +101,7 @@ fun TeamScreen(navController: NavController, teamId: Int?) {
 }
 
 @Composable
-fun TeamInfo(team: Team?, nextMatches: Matches?, lastMatch: Match?) {
+fun TeamInfo(team: Team?, nextMatches: Matches?, lastMatch: Match?, liveMatch: Match?) {
 
     val scrollState = rememberScrollState()
     val uriHandler = LocalUriHandler.current
@@ -151,11 +152,45 @@ fun TeamInfo(team: Team?, nextMatches: Matches?, lastMatch: Match?) {
         }
 
         Spacer(modifier = Modifier.height(12.dp))
+        LiveMatch(liveMatch)
+        Spacer(modifier = Modifier.height(12.dp))
         LastMatch(lastMatch)
         Spacer(modifier = Modifier.height(12.dp))
         UpcomingMatches(nextMatches)
         Spacer(modifier = Modifier.height(12.dp))
         SquadMembers(team?.squadMembers)
+    }
+}
+
+@Composable
+fun LiveMatch(lastMatch: Match?) {
+    lastMatch?.let {
+        Text(
+            text = stringResource(R.string.live_match),
+            style = MaterialTheme.typography.h2
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = CenterHorizontally
+        ) {
+            Text(
+                text = "${lastMatch.homeTeam}  ${lastMatch.homeTeamScore}",
+                color = Color.Red,
+                style = MaterialTheme.typography.h3,
+            )
+            Text(
+                text = stringResource(R.string.vs),
+                color = Color.Red,
+                style = MaterialTheme.typography.subtitle1
+            )
+            Text(
+                text = "${lastMatch.awayTeam}  ${lastMatch.awayTeamScore}",
+                color = Color.Red,
+                style = MaterialTheme.typography.h3
+            )
+        }
     }
 }
 
