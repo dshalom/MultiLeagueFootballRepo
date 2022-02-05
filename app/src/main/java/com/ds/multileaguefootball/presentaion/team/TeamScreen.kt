@@ -206,16 +206,19 @@ fun SquadMembers(squadMembers: List<SquadMember>?) {
 @Composable
 fun SquadMemberItem(squadMember: SquadMember) {
     Row(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth()
+            .padding(horizontal = 26.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = squadMember.name ?: "",
+            Modifier.weight(0.7f),
             style = MaterialTheme.typography.h3
         )
 
         Text(
             text = squadMember.position ?: "",
+            Modifier.weight(0.30f),
             style = MaterialTheme.typography.h3
         )
     }
