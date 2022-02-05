@@ -37,6 +37,6 @@ class FetchLiveMatchUseCase @Inject constructor(
 
     companion object {
         private const val FORMAT = "yyyy-MM-dd"
-        private const val STATUS = "IN_PLAY"
+        private const val STATUS = "LIVE"
     }
 }
