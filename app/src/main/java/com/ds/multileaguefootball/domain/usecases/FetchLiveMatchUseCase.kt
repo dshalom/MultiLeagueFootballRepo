@@ -12,7 +12,6 @@ class FetchLiveMatchUseCase @Inject constructor(
     private val repo: Repo
 ) : BaseUseCase<Int, Match> {
     override suspend fun invoke(teamId: Int) = flow {
-
         val current = LocalDateTime.now()
         val currentDateTimeFormatted =
             current.format(DateTimeFormatter.ofPattern(FORMAT))

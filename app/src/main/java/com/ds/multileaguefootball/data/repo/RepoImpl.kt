@@ -10,6 +10,13 @@ import com.ds.multileaguefootball.domain.repo.Repo
 import timber.log.Timber
 import javax.inject.Inject
 
+data class FetchMatchParams(
+    val teamId: Int,
+    val status: String,
+    val dateFrom: String,
+    val dateTo: String
+)
+
 class RepoImpl @Inject constructor(
     private val apiService: ApiService,
     private val inMemoryCache: InMemoryCache
@@ -54,6 +61,21 @@ class RepoImpl @Inject constructor(
         dateFrom: String,
         dateTo: String
     ): Matches? {
-        return apiService.fetchMatches(teamId, status, dateFrom, dateTo)?.toDomain()
+        val fetchMatchParams = FetchMatchParams(
+            teamId = teamId,
+            status = status,
+            dateFrom = dateFrom,
+            dateTo = dateTo
+        )
+
+        return inMemoryCache.matches[fetchMatchParams]?.also {
+            Timber.i("fetching matches from cache")
+        } ?: run {
+            Timber.i("fetching matches from remote")
+            return apiService.fetchMatches(teamId, status, dateFrom, dateTo)?.toDomain()
+                ?.also {
+                    inMemoryCache.matches[fetchMatchParams] = it
+                }
+        }
     }
 }
