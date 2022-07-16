@@ -6,7 +6,7 @@ import com.ds.multileaguefootball.domain.repo.Repo
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class FetchLeaguesUseCase @Inject constructor(
+class FetchCompetitionsUseCase @Inject constructor(
     private val repo: Repo,
     private val availableLeagues: List<Int>
 ) : BaseUseCase<Unit, List<Competition>> {
@@ -14,7 +14,7 @@ class FetchLeaguesUseCase @Inject constructor(
     override suspend fun invoke(other: Unit) = flow {
         emit(Resource.Loading())
         try {
-            val result = repo.fetchLeagues()
+            val result = repo.fetchCompetitions()
                 ?.filter {
                     it.ensignUrl != null && availableLeagues.contains(it.id)
                 }

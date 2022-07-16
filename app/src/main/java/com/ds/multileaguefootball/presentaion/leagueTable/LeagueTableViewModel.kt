@@ -3,13 +3,12 @@ package com.ds.multileaguefootball.presentaion.leagueTable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ds.multileaguefootball.domain.common.Resource
-import com.ds.multileaguefootball.domain.usecases.FetchLeaguesUseCase
+import com.ds.multileaguefootball.domain.usecases.FetchCompetitionsUseCase
 import com.ds.multileaguefootball.domain.usecases.FetchStandingsUseCase
 import com.ds.multileaguefootball.domain.usecases.StoredLeagueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +16,7 @@ import javax.inject.Inject
 class LeagueTableViewModel @Inject constructor(
     private val fetchStandingsUseCase: FetchStandingsUseCase,
     private val storedLeagueUseCase: StoredLeagueUseCase,
-    private val fetchLeaguesUseCase: FetchLeaguesUseCase
+    private val fetchCompetitionsUseCase: FetchCompetitionsUseCase
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<LeagueTableState> =
@@ -32,7 +31,7 @@ class LeagueTableViewModel @Inject constructor(
     val viewState: StateFlow<LeagueTableState> = _viewState
 
     init {
-        fetchLeagues()
+        fetchCompetitions()
         fetchLeague()
         fetchScreenTitle()
     }
@@ -59,9 +58,9 @@ class LeagueTableViewModel @Inject constructor(
         _viewState.value.leagues?.find { it.selected }?.selected = false
     }
 
-    private fun fetchLeagues() {
+    private fun fetchCompetitions() {
         viewModelScope.launch {
-            fetchLeaguesUseCase(Unit).collect { leaguesData ->
+            fetchCompetitionsUseCase(Unit).collect { leaguesData ->
 
                 _viewState.value = when (leaguesData) {
                     is Resource.Error -> viewState.value.copy(error = true)
