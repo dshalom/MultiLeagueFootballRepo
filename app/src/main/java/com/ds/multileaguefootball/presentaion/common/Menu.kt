@@ -52,7 +52,7 @@ fun LeaguesMenu(data: List<Competition>, onClick: (Competition) -> Unit) {
                         expanded.value = false
                     }
                 ) {
-                    LeagueMenuItem(it.name, it.ensignUrl ?: "", it.selected)
+                    LeagueMenuItem(it.name ?: "", it.ensignUrl ?: "", it.selected)
                 }
             }
         }
