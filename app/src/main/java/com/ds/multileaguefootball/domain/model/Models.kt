@@ -21,14 +21,14 @@ data class TableEntry(
 )
 
 data class Competition(
-    val id: Int,
-    val name: String,
+    val id: Int?,
+    val name: String?,
     val areaName: String?,
     val countryCode: String?,
     val currentSeasonId: Int?,
     val currentSeasonStartDate: String?,
     val currentSeasonEndDate: String?,
-    val ensignUrl: String,
+    val ensignUrl: String?,
     var selected: Boolean = false
 )
 

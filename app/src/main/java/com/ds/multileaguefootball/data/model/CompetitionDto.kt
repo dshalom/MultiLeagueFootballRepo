@@ -8,11 +8,11 @@ data class CompetitionDto(
     val area: AreaDto?,
     val currentSeason: CurrentSeasonDto? = null,
     val emblemUrl: String? = "",
-    val id: Int,
-    val lastUpdated: String,
-    val name: String,
+    val id: Int?,
+    val lastUpdated: String?,
+    val name: String?,
     val numberOfAvailableSeasons: Int? = 0,
-    val plan: String,
+    val plan: String?,
 ) {
     fun toDomain(): Competition {
         return Competition(
