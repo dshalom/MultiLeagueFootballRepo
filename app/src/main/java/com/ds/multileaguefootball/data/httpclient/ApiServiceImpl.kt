@@ -9,7 +9,7 @@ import io.ktor.client.request.get
 import javax.inject.Inject
 
 interface ApiService {
-    suspend fun fetchLeagues(): CompetitionsDto?
+    suspend fun fetchCompetitions(): CompetitionsDto?
     suspend fun fetchStandings(leagueId: Int): StandingsDto?
     suspend fun fetchTeam(teamId: Int): TeamDto?
     suspend fun fetchMatches(
@@ -24,7 +24,7 @@ class ApiServiceImpl @Inject constructor(
     private val client: HttpClient,
     private val baseAddress: String
 ) : ApiService {
-    override suspend fun fetchLeagues(): CompetitionsDto? =
+    override suspend fun fetchCompetitions(): CompetitionsDto? =
         client.get("${baseAddress}competitions")
 
     override suspend fun fetchStandings(leagueId: Int): StandingsDto? =

@@ -21,13 +21,13 @@ class RepoImpl @Inject constructor(
     private val apiService: ApiService,
     private val inMemoryCache: InMemoryCache
 ) : Repo {
-    override suspend fun fetchLeagues(): List<Competition>? {
+    override suspend fun fetchCompetitions(): List<Competition>? {
         return inMemoryCache.competitions?.also {
             Timber.i("fetching leagues from cache")
         } ?: run {
             Timber.i("fetching leagues from remote")
 
-            apiService.fetchLeagues()?.toDomain().also {
+            apiService.fetchCompetitions()?.toDomain().also {
                 inMemoryCache.competitions = it
             }
         }

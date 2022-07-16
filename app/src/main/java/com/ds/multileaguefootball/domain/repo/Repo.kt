@@ -6,7 +6,7 @@ import com.ds.multileaguefootball.domain.model.Standings
 import com.ds.multileaguefootball.domain.model.Team
 
 interface Repo {
-    suspend fun fetchLeagues(): List<Competition>?
+    suspend fun fetchCompetitions(): List<Competition>?
     suspend fun fetchStandings(leagueId: Int): Standings?
     suspend fun fetchTeam(teamId: Int): Team?
     suspend fun fetchMatches(

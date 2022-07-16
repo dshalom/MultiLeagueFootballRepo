@@ -49,8 +49,8 @@ class RepoImplTest {
 
         cut = RepoImpl(apiService, inMemoryCache)
 
-        assertEquals(competitions, cut.fetchLeagues())
-        coVerify(exactly = 0) { apiService.fetchLeagues() }
+        assertEquals(competitions, cut.fetchCompetitions())
+        coVerify(exactly = 0) { apiService.fetchCompetitions() }
     }
 
     @Test
@@ -60,7 +60,7 @@ class RepoImplTest {
             val inMemoryCache = InMemoryCache()
 
             coEvery {
-                apiService.fetchLeagues()
+                apiService.fetchCompetitions()
             } returns competitionsDto
 
             every {
@@ -69,9 +69,9 @@ class RepoImplTest {
 
             cut = RepoImpl(apiService, inMemoryCache)
 
-            assertEquals(competitions, cut.fetchLeagues())
+            assertEquals(competitions, cut.fetchCompetitions())
 
-            coVerify(exactly = 1) { apiService.fetchLeagues() }
+            coVerify(exactly = 1) { apiService.fetchCompetitions() }
             assertEquals(competitions, inMemoryCache.competitions)
         }
 
