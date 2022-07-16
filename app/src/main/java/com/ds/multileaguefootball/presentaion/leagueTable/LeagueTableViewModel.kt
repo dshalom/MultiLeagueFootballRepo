@@ -61,7 +61,6 @@ class LeagueTableViewModel @Inject constructor(
     private fun fetchCompetitions() {
         viewModelScope.launch {
             fetchCompetitionsUseCase(Unit).collect { leaguesData ->
-
                 _viewState.value = when (leaguesData) {
                     is Resource.Error -> viewState.value.copy(error = true)
                     is Resource.Loading -> viewState.value.copy(loading = true)
