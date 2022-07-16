@@ -9,6 +9,7 @@ import com.ds.multileaguefootball.domain.usecases.StoredLeagueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -61,14 +62,26 @@ class LeagueTableViewModel @Inject constructor(
     private fun fetchCompetitions() {
         viewModelScope.launch {
             fetchCompetitionsUseCase(Unit).collect { leaguesData ->
-                _viewState.value = when (leaguesData) {
-                    is Resource.Error -> viewState.value.copy(error = true)
-                    is Resource.Loading -> viewState.value.copy(loading = true)
-                    is Resource.Success -> {
-                        viewState.value.copy(
-                            leagues = leaguesData.data,
+                when (leaguesData) {
+                    is Resource.Error -> _viewState.update {
+                        it.copy(
+                            error = true,
+                            loading = false,
+                            standings = null
+                        )
+                    }
+                    is Resource.Loading -> _viewState.update {
+                        it.copy(
                             error = false,
-                            loading = false
+                            loading = true,
+                            standings = null
+                        )
+                    }
+                    is Resource.Success -> _viewState.update {
+                        it.copy(
+                            error = false,
+                            loading = false,
+                            leagues = leaguesData.data
                         )
                     }
                 }
@@ -96,22 +109,28 @@ class LeagueTableViewModel @Inject constructor(
                     leagueId?.let {
                         val result = fetchStandingsUseCase(leagueId = leagueId)
                         result.collect { resource ->
-                            _viewState.value = when (resource) {
-                                is Resource.Error -> viewState.value.copy(
-                                    error = true,
-                                    loading = false,
-                                    standings = null
-                                )
-                                is Resource.Loading -> viewState.value.copy(
-                                    loading = true,
-                                    error = false,
-                                    standings = null
-                                )
-                                is Resource.Success -> _viewState.value.copy(
-                                    standings = resource.data,
-                                    error = false,
-                                    loading = false
-                                )
+                            when (resource) {
+                                is Resource.Error -> _viewState.update {
+                                    it.copy(
+                                        error = true,
+                                        loading = false,
+                                        standings = null
+                                    )
+                                }
+                                is Resource.Loading -> _viewState.update {
+                                    it.copy(
+                                        loading = true,
+                                        error = false,
+                                        standings = null
+                                    )
+                                }
+                                is Resource.Success -> _viewState.update {
+                                    it.copy(
+                                        standings = resource.data,
+                                        error = false,
+                                        loading = false
+                                    )
+                                }
                             }
                         }
                     }
